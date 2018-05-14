@@ -1,72 +1,18 @@
 <template>
 <div id="side">
 	<ul class="nav">
-		<li class="module-1 item-manager">
-			<span class="big_class">系统设置</span>
+		<li class="module-1 item-manager" v-for='item in items'>
+			<span class="big_class" @click='showToggle(item)'>{{item.name}}</span>
 			<div class="module-2">
-				<ul class="nav">
-					<li><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runUserBaseInfo()">基本信息</a></span></li>
-					<li><span class="glyphicon glyphicon-stats"></span><span>&nbsp;&nbsp;<a href="javascript:runChangePassword()">修改密码</a></span></li>
-				</ul>
-			</div>
-		</li>
-		<li class="module-1" sec:authorize="hasAnyAuthority('service')">
-			<span class="big_class">业务查询</span>
-			<div class="module-2">
-				<ul class="nav">
-					<li sec:authorize="hasAuthority('service')"><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runRepaymentSearch()">债权还款查询</a></span></li>
-					<li sec:authorize="hasAuthority('service')"><span class="glyphicon glyphicon-stats"></span><span>&nbsp;&nbsp;<a href="javascript:runRepaymentOrderSearch()">订单还款查询</a></span></li>
-				</ul>
-			</div>
-		</li>
-		<li class="module-1" sec:authorize="hasAnyAuthority('log','money')">
-			<span class="big_class">日志管理</span>
-			<div class="module-2">
-				<ul class="nav">
-					<li sec:authorize="hasAuthority('money')"><span class="glyphicon glyphicon-signal"></span><span><a href="javascript:moneyRecord()">资金记录</a></span></li>
-					<li sec:authorize="hasAuthority('log')"><span class="glyphicon glyphicon-stats"></span><span><a href="javascript:generalJournal()">资金流水</a></span></li>
-				</ul>
-			</div>
-		</li>
-		<li class="module-1" >
-			<span class="big_class">客服服务</span>
-			<div class="module-2">
-				<ul class="nav">
-					<!--<li><span class="glyphicon glyphicon-edit"></span><span>&nbsp;&nbsp;<a href="javascript:customer_record()">客户服务</a></span></li>-->
-					<li><span class="glyphicon glyphicon-edit"></span><span>&nbsp;&nbsp;<a href="javascript:customer_service()">服务列表</a></span></li>
-				</ul>
-			</div>
-		</li>
-		<li class="module-1"  sec:authorize="hasAnyAuthority('role','menu')" >
-			<span class="big_class" >权限管理</span>
-			<div class="module-2">
-				<ul class="nav">
-					<li  sec:authorize="hasAuthority('role')"><span class="glyphicon glyphicon-eye-open"></span><span><a href="javascript:run_addUserManeger()">用户角色管理</a></span></li>
-					<li  sec:authorize="hasAuthority('role')"><span class="glyphicon glyphicon-eye-open"></span><span><a href="javascript:roleManage()">角色管理</a></span></li>
-					<li sec:authorize="hasAuthority('menu')"><span class="glyphicon glyphicon-eye-open"></span><span><a href="javascript:menuManage()">资源管理</a></span></li>
-				</ul>
-			</div>
-		</li>
-		<li class="module-1" sec:authorize="hasAuthority('user')">
-			<span class="big_class">用户管理</span>
-			<div class="module-2">
-				<ul class="nav">
-					<li sec:authorize="hasAuthority('user')"><span class="glyphicon glyphicon-edit"></span><span>&nbsp;&nbsp;<a href="javascript:run_addUser()">增加用户</a></span></li>
-					<li sec:authorize="hasAuthority('user')"><span class="glyphicon glyphicon-eye-open"></span><span>&nbsp;&nbsp;<a href="javascript:runOperaUser()">管理用户</a></span></li>
-					<li sec:authorize="hasAuthority('user')"><span class="glyphicon glyphicon-eye-open"></span><span>&nbsp;&nbsp;<a href="javascript:runUserLog()">用户登录流水</a></span></li>
-				</ul>
-			</div>
-		</li>
-		<li class="module-1">
-			<span class="big_class">考勤系统</span>
-			<div class="module-2">
-				<ul class="nav">
-					<!--<li><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runOvertimeManage()">加班管理</a></span></li>-->
-					<!--<li><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runRestManage()">调休管理</a></span></li>-->
-					<!--<li><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runLeaveManage()">请假管理</a></span></li>-->
-					<!--<li><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runDealManage()">审核管理</a></span></li>-->
-					<li><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runAttendanceManage()">考勤管理</a></span></li>
-					<li><span class="glyphicon glyphicon-signal"></span><span>&nbsp;&nbsp;<a href="javascript:runAttendanceAcount()">统计</a></span></li>
+				<ul class="nav" v-if='item.isSubShow'>
+					<li v-for='subItem in item.subItems'>
+						<span class="glyphicon glyphicon-signal">
+						</span>
+						<span>
+							&nbsp;&nbsp;
+							<a @click='runItemPage(subItem)'>{{subItem.name}}</a>
+						</span>
+					</li>
 				</ul>
 			</div>
 		</li>
@@ -76,18 +22,126 @@
 
 
 <script>
+
+import $ from 'jquery'
 export default {
 	name: 'left',
 	data () {
 		return {
-
+			isTrueForShow: false,
+			items: [
+				{
+					name: '系统设置',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '基本信息',
+						},
+						{
+							name: '修改密码',
+						}
+					]
+				},
+				{
+					name: '业务查询',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '债权还款查询',
+						},
+						{
+							name: '订单还款查询',
+						}
+					]
+				},
+				{
+					name: '日志管理',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '资金记录',
+						},
+						{
+							name: '资金流水',
+						}
+					]
+				},
+				{
+					name: '客服服务',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '用户角色管理',
+						},
+						{
+							name: '角色管理',
+						},
+						{
+							name: '资源管理',
+						}
+					]
+				},
+				{
+					name: '权限管理',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '债权还款查询',
+						},
+						{
+							name: '订单还款查询',
+						}
+					]
+				},
+				{
+					name: '用户管理',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '增加用户',
+						},
+						{
+							name: '管理用户',
+						},
+						{
+							name: '用户登录流水',
+						}
+					]
+				},
+				{
+					name: '考勤系统',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '加班管理',
+						},
+						{
+							name: '调休管理',
+						},
+						{
+							name: '请假管理',
+						},
+						{
+							name: '审核管理',
+						},
+						{
+							name: '考勤管理',
+						},
+						{
+							name: '统计',
+						}
+					]
+				}
+			]
 		}
 	},
 	component: {
 
-	},
+	},	
 	methods: {
-		
+		showToggle: function(item) {
+			item.isSubShow = !item.isSubShow;
+		}
 	}
 }
 </script>
@@ -158,6 +212,5 @@ export default {
 	padding-left: 5px;
 	text-align: left;
 	font-size: 14px;
-	display: none;
 }
 </style>
