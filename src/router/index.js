@@ -4,6 +4,7 @@ import login from '../components/login/login'
 import header from '../components/login/header'
 import register from '../components/register/register'
 import index from '../components/common/index'
+import attendance from '../components/attendance/attendance'
 
 Vue.use(Router)
 
@@ -22,7 +23,21 @@ export default new Router({
     {
       path: '/index',
       name: 'index',
-        component: index,
+      component: index,
+      children: [
+        {
+          path: '/r',
+          component: register
+        },
+        {
+          path: '/l',
+          component: login
+        },
+        {
+          path: '/attendance/attendance',
+          component: attendance
+        }
+      ]
     }
   ]
 })

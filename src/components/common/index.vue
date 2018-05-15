@@ -1,48 +1,199 @@
 <template>
-	<div id="main">	
-		<Header></Header>
-		<div id="include_left_and_main">
-			<Left></Left>
-			<Content></Content>
-		</div>
-	</div>
+<div>
+<el-header style="height: 50px; text-align: left; font- : 12px; background-color: #31263D">
+  <span style="color: #FFFFFF; font-size: 18px; padding-bottom: -10px">笑脸金融客服助手管理系统 V1.1.0</span>
+</el-header>
+<el-container style="height: 590px; border: 1px solid #eee">
+  <el-aside width="160px" style="background-color: #31263D">
+    <el-menu :default-openeds="['1', '3']">
+      <el-submenu :index="index+1" v-for="(item,index) in items" :key="index">
+        <template slot="title"><i class="el-icon-message"></i>{{item.name}}</template>
+        <el-menu-item-group>
+          <el-menu-item :index="subItem.code" v-for="(subItem,subItemIndex) in item.subItems" :key="subItemIndex">
+          	<router-link :to='subItem.url'>{{subItem.name}}</router-link>
+          </el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+    </el-menu>
+  </el-aside>
+
+  <el-main>
+	  	<router-view></router-view>
+  </el-main>
+</el-container>
+</div>
 </template>
 
-<script src="/static/js/jquery-3.1.1.js"></script>
-<script src="/static/js/bootstrap.min.js"></script>
-<script src="/static/js/kindeditor-all-min.js"></script>
-<script src="/static/js/common.js"></script>
-<script src="/static/lang/zh-CN.js"></script>
+<style>
+  .el-header {
+    background-color: #B3C0D1;
+    color: #333;
+    line-height: 60px;
+  }
+  
+  .el-aside {
+    color: #333;
+  }
+</style>
+
 <script>
 
-import Header from './head.vue'
-import Left from './left.vue'
-import Content from './content.vue'
+  export default {
+	name: 'index',
+	data () {
+		return {
+			items: [
+				{
+					name: '系统设置',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '基本信息',
+							url: '/r',
+							isSubItemShow: false,
+							code: '1-1'
+						},
+						{
+							name: '修改密码',
+							url: '/l',
+							isSubItemShow: false,
+							code: '1-2'
+						}
+					]
+				},
+				{
+					name: '业务查询',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '债权还款查询',
+							url: '/service/search',
+							isSubItemShow: false,
+							code: '2-1'
+						},
+						{
+							name: '订单还款查询',
+							url: '/service/orderSearch',
+							isSubItemShow: false,
+							code: '2-2'
+						}
+					]
+				},
+				{
+					name: '日志管理',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '资金记录',
+							url: '/money/moneyRecord',
+							code: '3-1'
+						},
+						{
+							name: '资金流水',
+							url: '/log/generalJournal',
+							code: '3-2'
+						}
+					]
+				},
+				{
+					name: '客服服务',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '客户服务',
+							url: '/customer/customerRecord',
+							code: '4-1'
+						},
+						{
+							name: '服务列表',
+							url: '/customer/showService',
+							code: '4-2'
+						}
+					]
+				},
+				{
+					name: '权限管理',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '用户角色管理',
+							url: '/role/userManage',
+							code: '5-1'
+						},
+						{
+							name: '角色管理',
+							url: '/role/userManage',
+							code: '5-2'
+						},
+						{
+							name: '资源管理',
+							url: '/menu/menuManage',
+							code: '5-3'
+						}
+					]
+				},
+				{
+					name: '用户管理',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '增加用户',
+							url: '/um/addUser',
+							code: '6-1'
+						},
+						{
+							name: '管理用户',
+							url: '/um/managerment',
+							code: '6-2'
+						},
+						{
+							name: '用户登录流水',
+							url: '/um/loginRecord',
+							code: '6-3'
+						}
+					]
+				},
+				{
+					name: '考勤系统',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '加班管理',
+							url: '/attendance/overtime',
+							code: '7-1'
+						},
+						{
+							name: '调休管理',
+							url: '/attendance/rest',
+							code: '7-2'
+						},
+						{
+							name: '请假管理',
+							url: '/attendance/leave',
+							code: '7-3'
+						},
+						{
+							name: '审核管理',
+							url: '/attendance/deal',
+							code: '7-4'
+						},
+						{
+							name: '考勤管理',
+							url: '/attendance/attendance',
+							code: '7-5'
+						},
+						{
+							name: '统计',
+							url: '/attendance/acount',
+							code: '7-6'
+						}
+					]
+				}
+			]
+		}
+	},
+	component : {
 
-export default {
-    name: 'index',
-    data () {
-        return {
-            
-    	}
-  	},
-  	components: {
-		Header,
-		Left,
-		Content,
-  	},
-}
+	},
+  };
 </script>
-
-<style>
-#main {
-}
-
-
-#include_left_and_main {
-	position: absolute;
-	background-color: #FFFFFF;
-	width: 100%;
-
-}
-</style>

@@ -1,35 +1,6 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:include="common/head_info::head_infor"></div>
-    <script type="text/javascript" th:src="@{../js/layer.js}"></script>
-    <script type="text/javascript" th:src="@{../js/jquery.dataTables.min.js}"></script>
-    <script type="text/javascript" th:src="@{../attendance/js/attendance.js}"></script>
-    <script type="text/javascript" th:src="@{../attendance/js/jquery.ocupload-1.1.2.js}"></script>
-    <!--<script type="text/javascript" th:src="@{../js/bootstrap-datetimepicker.js}"></script>-->
-    <!--<script type="text/javascript" th:src="@{../js/bootstrap-datetimepicker.zh-CN.js}"></script>-->
-    <script type="text/javascript" th:src="@{../js/dateFormat.js}"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{../css/dataTables-style.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{../css/jquery.dataTables.min.css}">
-    <!--<link rel="stylesheet" type="text/css" th:href="@{../css/bootstrap-datetimepicker.css}">-->
-    <script type="text/javascript" th:src="@{../My97DatePicker/WdatePicker.js}"></script>
 
-    <style type="text/css">
-        .Wdate{
-            background-image:url('../My97DatePicker/skin/datePicker.gif');
-        }
-        label{
-            margin:0 5px;
-        }
-    </style>
-    <style type="text/css">
-        .exportHide{
-            display: none;
-        }
-    </style>
-</head>
-<body>
-
+<template>
+  
     <div id="content">
         <div class="container-fluid">
 
@@ -46,10 +17,10 @@
                     </select>
                     <label class="labe_l" for="attendanceDate">考勤时间:</label>
                     <!--<input type="text" class="form_datetime form-control" id="attendanceDate" readonly>-->
-                    <input class="Wdate form-control" type="text" id="attendanceDate" onClick="WdatePicker({el:this,dateFmt:'yyyy-MM',readOnly:true})" readonly>
+                    <input class="Wdate form-control" type="text" id="attendanceDate" v-on:click="WdatePicker({el:this,dateFmt:'yyyy-MM',readOnly:true})" readonly>
                     <input type="hidden" id="attendanceDateInput" name="attendanceDate" value="">
                 </div>
-                <span class="btn btn-primary" onclick="searchAttendance()">查询</span>
+                <span class="btn btn-primary" @click="searchAttendance()">查询</span>
             </form>
 
             <form id="importForm" enctype="multipart/form-data" style="padding-top: 15px;float: right">
@@ -86,5 +57,35 @@
 
         </div>
     </div>
-</body>
-</html>
+</template>
+
+<script>
+
+export default {
+    created(){//加载页面执行事件
+        console.log(this.HOST);
+      this.$http.post(this.HOST + '/dept/getAllDept')
+	  .then(function (response) {
+        var depts=response.data.data;
+            var str = "";
+            for(var i = 0; i < depts.length; i++){
+                str += "<option value='"+depts[i].deptNumber+"'>"+depts[i]+"</option>"
+            }
+            $("#companySelect").append(str);
+	  })
+      
+} 
+}
+</script>
+<style>
+    .Wdate{
+            background-image:url('../../../static/js/My97DatePicker/skin/datePicker.gif');
+        }
+    label{
+            margin:0 5px;
+        }
+    .exportHide{
+        display: none;
+    }
+</style>
+

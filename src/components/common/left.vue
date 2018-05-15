@@ -10,7 +10,7 @@
 						</span>
 						<span>
 							&nbsp;&nbsp;
-							<a @click='runItemPage(subItem)'>{{subItem.name}}</a>
+							<span @click='runItemPage(subItem.url)'>{{subItem.name}}</span>
 						</span>
 					</li>
 				</ul>
@@ -24,6 +24,7 @@
 <script>
 
 import $ from 'jquery'
+import Content from './content'
 export default {
 	name: 'left',
 	data () {
@@ -36,9 +37,11 @@ export default {
 					subItems:  [
 						{
 							name: '基本信息',
+							url: '/sc/base_infomation',
 						},
 						{
 							name: '修改密码',
+							url: '/sc/reset_password',
 						}
 					]
 				},
@@ -48,9 +51,11 @@ export default {
 					subItems:  [
 						{
 							name: '债权还款查询',
+							url: '/service/search',
 						},
 						{
 							name: '订单还款查询',
+							url: '/service/orderSearch',
 						}
 					]
 				},
@@ -60,9 +65,11 @@ export default {
 					subItems:  [
 						{
 							name: '资金记录',
+							url: '/money/moneyRecord',
 						},
 						{
 							name: '资金流水',
+							url: '/log/generalJournal',
 						}
 					]
 				},
@@ -71,13 +78,12 @@ export default {
 					isSubShow: false,
 					subItems:  [
 						{
-							name: '用户角色管理',
+							name: '客户服务',
+							url: '/customer/customerRecord',
 						},
 						{
-							name: '角色管理',
-						},
-						{
-							name: '资源管理',
+							name: '服务列表',
+							url: '/customer/showService',
 						}
 					]
 				},
@@ -86,10 +92,16 @@ export default {
 					isSubShow: false,
 					subItems:  [
 						{
-							name: '债权还款查询',
+							name: '用户角色管理',
+							url: '/role/userManage',
 						},
 						{
-							name: '订单还款查询',
+							name: '角色管理',
+							url: '/role/userManage',
+						},
+						{
+							name: '资源管理',
+							url: '/menu/menuManage',
 						}
 					]
 				},
@@ -99,12 +111,15 @@ export default {
 					subItems:  [
 						{
 							name: '增加用户',
+							url: '/um/addUser',
 						},
 						{
 							name: '管理用户',
+							url: '/um/managerment',
 						},
 						{
 							name: '用户登录流水',
+							url: '/um/loginRecord',
 						}
 					]
 				},
@@ -114,21 +129,27 @@ export default {
 					subItems:  [
 						{
 							name: '加班管理',
+							url: '/attendance/overtime',
 						},
 						{
 							name: '调休管理',
+							url: '/attendance/rest',
 						},
 						{
 							name: '请假管理',
+							url: '/attendance/leave',
 						},
 						{
 							name: '审核管理',
+							url: '/attendance/deal',
 						},
 						{
 							name: '考勤管理',
+							url: '/attendance/attendance',
 						},
 						{
 							name: '统计',
+							url: '/attendance/acount',
 						}
 					]
 				}
@@ -141,6 +162,9 @@ export default {
 	methods: {
 		showToggle: function(item) {
 			item.isSubShow = !item.isSubShow;
+		},
+		runItemPage: function(url) {
+			Content.methods.runPage(url);
 		}
 	}
 }

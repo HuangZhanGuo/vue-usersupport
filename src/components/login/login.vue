@@ -73,8 +73,8 @@ export default {
 	  var params = new URLSearchParams();
 	  params.append('username', this.user.username);
 	  params.append('password', this.user.password);
-	  
-	  this.$http.post(this.HOST + '/loginTest.do', params)
+	  console.log(this.HOST);
+	  this.$http.post(this.HOST + '/login.do', params)
 	  .then(function (response) {
 		console.log(response.data);
 	  })

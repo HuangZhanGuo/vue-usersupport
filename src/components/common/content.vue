@@ -51,30 +51,32 @@
 				</li>
 			</ul>
 		</div>
+		<router-view></router-view>
 		<!--系统设置--基本信息 -->
-		<iframe class="center_show_area" id="system-base-info-page" frameborder="0"></iframe>
-		<!--系统设置--修改密码 -->
-		<iframe class="center_show_area" id="system-change-password-page" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="system-base-info-page" frameborder="0"></iframe>-->
+		<router-view></router-view>
+		<!--系统设置--修改密码-->
+		<!--<iframe class="center_show_area" id="system-change-password-page" frameborder="0"></iframe>-->
 		<!--业务查询--债权还款查询 -->
-		<iframe class="center_show_area" id="service-repayment-page"  frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="service-repayment-page"  frameborder="0"></iframe>-->
 		<!--业务查询--订单还款查询 -->
-		<iframe class="center_show_area" id="service-repaymentOrder-page" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="service-repaymentOrder-page" frameborder="0"></iframe>-->
 		<!--资金记录 -->
-		<iframe class="center_show_area" id="log-record" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="log-record" frameborder="0"></iframe>-->
 		<!--资金流水 -->
-		<iframe class="center_show_area" id="log-journal" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="log-journal" frameborder="0"></iframe>-->
 		<!--角色管理 -->
-		<iframe class="center_show_area" id="role-manage" src="/role/roleManage" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="role-manage" src="/role/roleManage" frameborder="0"></iframe>-->
 		<!--用户角色管理 -->
-		<iframe class="center_show_area" id="userPermission-manage" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="userPermission-manage" frameborder="0"></iframe>-->
 		<!--菜单管理 -->
-		<iframe class="center_show_area" id="menu-manage" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="menu-manage" frameborder="0"></iframe>-->
 		<!--用户管理--增加用户 -->
-		<iframe  class="center_show_area" id="userManager-add-user-page" frameborder="0"></iframe>
+		<!--<iframe  class="center_show_area" id="userManager-add-user-page" frameborder="0"></iframe>-->
 		<!--用户管理--管理用户 -->
-		<iframe  class="center_show_area" id="userManager-opera-user-page" frameborder="0"></iframe>
+		<!--<iframe  class="center_show_area" id="userManager-opera-user-page" frameborder="0"></iframe>-->
 		<!--用户管理--用户登录流水 -->
-		<iframe  class="center_show_area" id="userManager-login-page" frameborder="0"></iframe>
+		<!--<iframe  class="center_show_area" id="userManager-login-page" frameborder="0"></iframe>-->
 		<!--考勤系统--加班管理-->
 		<!--<iframe  class="center_show_area" id="attendance-overtime-page" frameborder="0"></iframe>-->
 		<!--考勤系统--调休管理-->
@@ -84,13 +86,13 @@
 		<!--考勤系统--审核管理-->
 		<!--<iframe  class="center_show_area" id="attendance-deal-page" frameborder="0"></iframe>-->
 		<!--考勤系统--考勤管理-->
-		<iframe  class="center_show_area" id="attendance-attendance-page" frameborder="0"></iframe>
+		<!--<iframe  class="center_show_area" id="attendance-attendance-page" frameborder="0"></iframe>-->
 		<!--考勤系统--统计-->
-		<iframe  class="center_show_area" id="attendance-acount-page" frameborder="0"></iframe>
+		<!--<iframe  class="center_show_area" id="attendance-acount-page" frameborder="0"></iframe>-->
 		<!--客服服务--致电信息处理 -->
 		<!--<iframe class="center_show_area" id="customer_record" frameborder="0"></iframe>-->
 		<!--客服服务--服务列表 -->
-		<iframe class="center_show_area" id="customer_service" frameborder="0"></iframe>
+		<!--<iframe class="center_show_area" id="customer_service" frameborder="0"></iframe>-->
 	</div>		
 </div>
 </template>
@@ -101,12 +103,18 @@ export default {
 	name: 'content',
 	data () {
 		return {
-
+			testData: "这是测试用的",
 		}
 	},
 	component: {
 
 	},
+	methods: {
+		runPage: function(url) {
+			console.log(url);
+			$("router-view")
+		}
+	}
 }
 </script>
 
