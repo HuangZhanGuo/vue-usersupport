@@ -157,26 +157,26 @@
 					name: '考勤系统',
 					isSubShow: false,
 					subItems:  [
-						{
-							name: '加班管理',
-							url: '/attendance/overtime',
-							code: '7-1'
-						},
-						{
-							name: '调休管理',
-							url: '/attendance/rest',
-							code: '7-2'
-						},
-						{
-							name: '请假管理',
-							url: '/attendance/leave',
-							code: '7-3'
-						},
-						{
-							name: '审核管理',
-							url: '/attendance/deal',
-							code: '7-4'
-						},
+						// {
+						// 	name: '加班管理',
+						// 	url: '/attendance/overtime',
+						// 	code: '7-1'
+						// },
+						// {
+						// 	name: '调休管理',
+						// 	url: '/attendance/rest',
+						// 	code: '7-2'
+						// },
+						// {
+						// 	name: '请假管理',
+						// 	url: '/attendance/leave',
+						// 	code: '7-3'
+						// },
+						// {
+						// 	name: '审核管理',
+						// 	url: '/attendance/deal',
+						// 	code: '7-4'
+						// },
 						{
 							name: '考勤管理',
 							url: '/attendance/attendance',

@@ -12,16 +12,16 @@
 					<td><span>通行码:&nbsp; </span></span></td>
 					<td><input class="user-write-input" type="password" name="password" v-model="user.password"></td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td><span>验证码:&nbsp; </span></span></td>
 					<td><input type="text" name="verityCode" class="verityCode" id="myVerityCode" onchange="javascript:blurForVerityCode();"/></td>
-				</tr>
-				<tr>
+				</tr> -->
+				<!-- <tr>
 					<td colspan="2">
 						<img src="/verity/verityImg" class="verityImg" id="myVerityImg"/>
 						<a id="btn_changeVerityImg" href="javascript:changeVerityImg()">换一张</a>
 					</td>
-				</tr>
+				</tr> -->
 				<tr>
 					<router-link to="/register">立即注册</router-link>
 				</tr>
@@ -73,10 +73,15 @@ export default {
 	  var params = new URLSearchParams();
 	  params.append('username', this.user.username);
 	  params.append('password', this.user.password);
-	  console.log(this.HOST);
-	  this.$http.post(this.HOST + '/login.do', params)
+		alert(params);
+	  this.$http.post(this.HOST + '/login', params)
 	  .then(function (response) {
-		console.log(response.data);
+			if(response.data.code==1){
+				window.location.href = '#/index'
+			}
+			if(response.data.code==0){
+				alert(response.data.msg);
+			}
 	  })
 	  .catch(function (error) {
 		console.log(error);

@@ -127,22 +127,22 @@ export default {
 					name: '考勤系统',
 					isSubShow: false,
 					subItems:  [
-						{
-							name: '加班管理',
-							url: '/attendance/overtime',
-						},
-						{
-							name: '调休管理',
-							url: '/attendance/rest',
-						},
-						{
-							name: '请假管理',
-							url: '/attendance/leave',
-						},
-						{
-							name: '审核管理',
-							url: '/attendance/deal',
-						},
+						// {
+						// 	name: '加班管理',
+						// 	url: '/attendance/overtime',
+						// },
+						// {
+						// 	name: '调休管理',
+						// 	url: '/attendance/rest',
+						// },
+						// {
+						// 	name: '请假管理',
+						// 	url: '/attendance/leave',
+						// },
+						// {
+						// 	name: '审核管理',
+						// 	url: '/attendance/deal',
+						// },
 						{
 							name: '考勤管理',
 							url: '/attendance/attendance',
