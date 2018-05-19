@@ -113,6 +113,7 @@ export default {
             },
 
     created(){//加载页面执行事
+            //初始化部门
             this.$http.post(this.HOST + '/dept/getAllDept')
             .then(function (response) {
             var depts=response.data.data;
@@ -126,6 +127,7 @@ export default {
             
         },  
     methods:{
+        //初始化成员
         changeCount:function() {
             var params = new URLSearchParams();
             params.append('deptNumber', this.deptNumber);
@@ -142,6 +144,7 @@ export default {
             })
           
         },
+        //组合查询
        searchAttendance:function(){
            this.$message.warning("进入方法");
            // 校验查询条件
@@ -183,7 +186,7 @@ export default {
             this.searchAttendance(this.currentPage, this.pagesize);
         },    
        //
-
+       //excel导入操作
        importAttendance : function(){
            var formData = new FormData($("#importForm")[0]);
            this.$http
