@@ -1,4 +1,5 @@
 
+import func from './vue-temp/vue-editor-bridge';
 <template>
   
     <div id="content">
@@ -12,7 +13,7 @@
                     </select>
                     <input type="hidden" id="deptNameInput" name="deptName" value="">
                     <label class="labe_l" for="empSelect">人员:</label>
-                    <select id="empSelect" class="form-control" name="workNumber">
+                    <select id="empSelect" class="form-control" v-model="workNumber" name="workNumber">
                         <option value="">--请选择--</option>
                     </select>
                     <label class="labe_l" for="attendanceDate">考勤时间:</label>
@@ -20,7 +21,7 @@
                     <input class="Wdate form-control" type="text" id="attendanceDate" @click="WdatePicker({el:this,dateFmt:'yyyy-MM',readOnly:true})" readonly>
                     <input type="hidden" id="attendanceDateInput" name="attendanceDate" value="">
                 </div>
-                <span class="btn btn-primary" @click="searchAttendance()">查询</span>
+                <span class="btn btn-primary" v-on:click="searchAttendance">查询</span>
             </form>
 
             <form id="importForm" enctype="multipart/form-data" style="padding-top: 15px;float: right">
@@ -52,7 +53,24 @@
                             <th>状态</th>
                         </tr>
                     </thead>
+                     <thead>
+                        <tr v-for="(peopel in tableData">
+                            <th v-text="peopel.workNumberr"></th>
+                            
+                        </tr>
+                    </thead>
                 </table>
+            </div>
+            <div align="center">
+              <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page="currentPage"
+                  :page-sizes="[10, 20, 30, 40]"
+                  :page-size="pagesize"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="totalCount">
+              </el-pagination>
             </div>
 
         </div>
@@ -62,6 +80,38 @@
 <script>
 
 export default {
+    data: {     
+                //表格当前页数据
+                tableData: []
+
+                // //多选数组
+                // multipleSelection: [],
+
+                // //请求的URL
+                // // url:'newstu/querystudentbypage',
+
+                // //搜索条件
+                // criteria: '',
+
+                // //下拉菜单选项
+                // select: '',
+
+                // //默认每页数据量
+                // pageSize: 10,
+
+                // //默认高亮行数据id
+                // highlightId: -1,
+
+                // //当前页码
+                // currentPage: 1,
+
+                // //查询的页码
+                // start: 1,
+
+                // //默认数据总数
+                // totalCount: 1000,
+            },
+
     created(){//加载页面执行事
             this.$http.post(this.HOST + '/dept/getAllDept')
             .then(function (response) {
@@ -92,137 +142,48 @@ export default {
             })
           
         },
-       getQueryCondition:function(data) {
-            var params = {};
-            params.deptNumber = $("#companySelect").val();
-            params.deptName = $("#companySelect option:selected").text();
-            params.workNumber = $("#empSelect").val();
-            params.attendanceDate = new Date($("#attendanceDate").val());
-
-            //组装分页参数
-            params.draw = data.draw;
-            return params;
-        },
-        
-        searchAttendance:function(){
-            // 校验查询条件
-            var tableNotLoad = true;
-            
+       searchAttendance:function(){
+           this.$message.warning("进入方法");
+           // 校验查询条件
             var deptNumber = $("#companySelect").val();
             var deptName = $("#companySelect option:selected").text();
             if(deptNumber == "" || deptNumber == null){
                 alert("请选择部门");
                 return;
             }
-
             var workNumber = $("#empSelect").val();
-            // var attenDate = $("#attendanceDate").val();
-            // if(attenDate == "" || attenDate == null){
-            //     alert("请选择考勤时间");
-            //     return;
-            // }
-            if(tableNotLoad) {
-            $('#attendanceTable').DataTable({
-                "searching": true, // 从结果搜索
-                "bJQueryUI": true,
-                "aaSorting": [3, "desc"], // 按第7列倒序排列
-                "sPaginationType": "full_numbers",
-                "serverSide": false, // true代表后台分页，false代表前台分页
-                // 表格填充数据来源，使用ajax异步请求后台获取数据
-                ajax: function (data, callback, settings) {
-                    var params = getQueryCondition(data)
-                     this.$http
-                    .post(this.HOST + "/attendance/getAttendanceRecord", params)
-                    .then(function(response) {
-                        $("#exportExcel").removeClass("hide");
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                    });
-                },
-                "columns": [
-                    {
-                        "data": null,
-                        "render": function (data, type, full, meta) {
-                            return meta.row + 1;
-                        }
-                    },
-                    {"data": "workNumber"},
-                    {"data": "empName"},
-                    {
-                        "data": "attendanceDate",
-                        "render": function (data, type, full, meta) {
-                            return Format(new Date(data),"yyyy-MM-dd")
-                        }
-                    },
-                    {
-                        "data": "startTime",
-                        "render": function (data, type, full, meta) {
-                            return Format(new Date(data)," HH:mm")
-                        }
-                    },
-                    {
-                        "data": "endTime",
-                        "render": function (data, type, full, meta) {
-                            return Format(new Date(data)," HH:mm")
-                        }
-                    },
-                    {
-                        "data": "status",
-                        "render": function (data, type, full, meta) {
-                            //类型：0导航菜单；1操作按钮。
-                            switch (data) {
-                                case 0:
-                                    return "正常";
-                                    break;
-                                case 1:
-                                    return "迟到";
-                                    break;
-                                case 2:
-                                    return "早退";
-                                    break;
-                                case 3:
-                                    return "迟到早退";
-                                    break;
-                                case 4:
-                                    return "旷工";
-                                    break;
-                                case 5:
-                                    return "异常";
-                                    break;
-                                case 6:
-                                    return "请假";
-                                    break;
-                                case 7:
-                                    return "调休";
-                                    break;
-                            }
-                        }
-                    }
-                ],
-                "oLanguage": {    // 语言设置
-                    "sLengthMenu": "每页显示 _MENU_ 条记录",
-                    "sZeroRecords": "抱歉， 没有找到",
-                    "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
-                    "sInfoEmpty": "没有数据",
-                    "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
-                    "sZeroRecords": "没有检索到数据",
-                    "sSearch": "检索:",
-                    "oPaginate": {
-                        "sFirst": "首页",
-                        "sPrevious": "前一页",
-                        "sNext": "后一页",
-                        "sLast": "尾页"
-                    }
-                }
-            });
-
-            tableNotLoad = false;
-        }else {
-            attenTable.ajax.reload();
-        }
+            var attenDate = $("#attendanceDate").val();
+            var params = new URLSearchParams();
+            var pageSize=10;
+            var pageNumber=1;
+            // params.append("deptNumber", deptNumber);
+            params.append("workNumber", workNumber);
+            params.append("deptName", deptName);
+            params.append("pageNumber",pageNumber);
+            params.append("pageSize",pageSize);
+            alert(pageNumber);
+             alert(pageSize);
+            this.$http.post(this.HOST+"/attendance/getAttendanceRecord",params)
+            .then(function(res){
+               this.tableData=res.data.data.data;
+                 console.log(this.tableData);
+            })
+           
         },
+        //每页显示数据量变更
+        handleSizeChange: function(val) {
+            this.pagesize = val;
+            alert(val)
+            this.loadData(this.criteria, this.currentPage, this.pagesize);
+        },
+
+        //页码变更
+        handleCurrentChange: function(val) {
+            this.currentPage = val;
+            this.searchAttendance(this.currentPage, this.pagesize);
+        },    
        //
+
        importAttendance : function(){
            var formData = new FormData($("#importForm")[0]);
            this.$http

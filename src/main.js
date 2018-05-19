@@ -14,7 +14,6 @@ import '../static/css/bootstrap.min.css'
 import '../static/css/bootstrap-theme.min.css'
 import '../static/js/themes/default/default.css'
 import '../static/css/common.css'
-
 /* 设置跨域 */  
 Vue.prototype.HOST = '/api'
 
