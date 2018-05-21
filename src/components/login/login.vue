@@ -72,7 +72,7 @@ export default {
       var params = new URLSearchParams();
       params.append("username", this.user.username);
       params.append("password", this.user.password);
-      alert(params);
+     
       this.$http
         .post(this.HOST + "/login", params)
         .then(function(response) {

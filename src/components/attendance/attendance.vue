@@ -41,36 +41,51 @@ import func from './vue-temp/vue-editor-bridge';
             </div>
 
             <div>
-                <table class="table table-bordered data-table" cellspacing="0" width="100%" id="attendanceTable">
-                    <thead>
-                        <tr>
-                            <th>编号</th>
-                            <th>员工号</th>
-                            <th>员工姓名</th>
-                            <th>考勤日期</th>
-                            <th>上班打卡时间</th>
-                            <th>下班打卡时间</th>
-                            <th>状态</th>
-                        </tr>
-                    </thead>
-                     <thead>
-                        <tr v-for="(peopel in tableData">
-                            <th v-text="peopel.workNumberr"></th>
-                            
-                        </tr>
-                    </thead>
-                </table>
+                <el-table
+                    :data="tableData"
+                    style="width: 100%">
+                    <el-table-column
+                        prop="id"
+                        label="编号"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="workNumber"
+                        label="员工号"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="empName"
+                        label="员工姓名">
+                    </el-table-column>
+                    <el-table-column
+                        prop="attendanceDate"
+                        label="考勤日期">
+                    </el-table-column>
+                    <el-table-column
+                        prop="startTime"
+                        label="上班打卡时间">
+                    </el-table-column>
+                    <el-table-column
+                        prop="endTime"
+                        label="下班打卡时间">
+                    </el-table-column>
+                    <el-table-column
+                        prop="status"
+                        label="状态">
+                    </el-table-column>
+                </el-table>
             </div>
             <div align="center">
               <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-sizes="[10, 20, 30, 40]"
-                  :page-size="pagesize"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="totalCount">
-              </el-pagination>
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="10"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+            </el-pagination>
             </div>
 
         </div>
@@ -80,37 +95,14 @@ import func from './vue-temp/vue-editor-bridge';
 <script>
 
 export default {
-    data: {     
-                //表格当前页数据
-                tableData: []
-
-                // //多选数组
-                // multipleSelection: [],
-
-                // //请求的URL
-                // // url:'newstu/querystudentbypage',
-
-                // //搜索条件
-                // criteria: '',
-
-                // //下拉菜单选项
-                // select: '',
-
-                // //默认每页数据量
-                // pageSize: 10,
-
-                // //默认高亮行数据id
-                // highlightId: -1,
-
-                // //当前页码
-                // currentPage: 1,
-
-                // //查询的页码
-                // start: 1,
-
-                // //默认数据总数
-                // totalCount: 1000,
-            },
+    data () { 
+        return { 
+        tableData: [], 
+        currentPage:1, 
+        pagesize:10, 
+        total:100
+        } 
+    },     
 
     created(){//加载页面执行事
             //初始化部门
@@ -146,6 +138,7 @@ export default {
         },
         //组合查询
        searchAttendance:function(){
+           let self = this;
            this.$message.warning("进入方法");
            // 校验查询条件
             var deptNumber = $("#companySelect").val();
@@ -157,19 +150,20 @@ export default {
             var workNumber = $("#empSelect").val();
             var attenDate = $("#attendanceDate").val();
             var params = new URLSearchParams();
-            var pageSize=10;
-            var pageNumber=1;
-            // params.append("deptNumber", deptNumber);
+           // var pageSize=10;
+            //var pageNumber=1;
+            alert("--"+self.currentPage);
+            params.append("deptNumber", deptNumber);
             params.append("workNumber", workNumber);
             params.append("deptName", deptName);
-            params.append("pageNumber",pageNumber);
-            params.append("pageSize",pageSize);
-            alert(pageNumber);
-             alert(pageSize);
+            params.append("pageNumber",self.currentPage);
+            params.append("pageSize",self.pagesize);
+            
             this.$http.post(this.HOST+"/attendance/getAttendanceRecord",params)
             .then(function(res){
-               this.tableData=res.data.data.data;
-                 console.log(this.tableData);
+              self.tableData=res.data.data.data;
+              self.total=res.data.data.totalCount;
+                 console.log(self.tableData);
             })
            
         },
@@ -177,7 +171,7 @@ export default {
         handleSizeChange: function(val) {
             this.pagesize = val;
             alert(val)
-            this.loadData(this.criteria, this.currentPage, this.pagesize);
+            this.searchAttendance(this.currentPage, this.pagesize);
         },
 
         //页码变更
