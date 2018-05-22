@@ -5,7 +5,7 @@ import header from '../components/login/header'
 import register from '../components/register/register'
 import index from '../components/common/index'
 import attendance from '../components/attendance/attendance'
-
+import acount from '../components/attendance/acount'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +36,10 @@ export default new Router({
         {
           path: '/attendance/attendance',
           component: attendance
+        },
+        {
+          path: '/attendance/acount',
+          component: acount
         }
       ]
     }

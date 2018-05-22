@@ -1,5 +1,4 @@
 
-import func from './vue-temp/vue-editor-bridge';
 <template>
   
     <div id="content">
@@ -18,8 +17,12 @@ import func from './vue-temp/vue-editor-bridge';
                     </select>
                     <label class="labe_l" for="attendanceDate">考勤时间:</label>
                     <!--<input type="text" class="form_datetime form-control" id="attendanceDate" readonly>-->
-                    <input class="Wdate form-control" type="text" id="attendanceDate" @click="WdatePicker({el:this,dateFmt:'yyyy-MM',readOnly:true})" readonly>
-                    <input type="hidden" id="attendanceDateInput" name="attendanceDate" value="">
+                    <el-date-picker
+                        v-model="DateValue"
+                        type="date"
+                        placeholder="选择日期"
+                        format="yyyy 年 MM 月 dd 日">
+                    </el-date-picker>
                 </div>
                 <span class="btn btn-primary" v-on:click="searchAttendance">查询</span>
             </form>
@@ -35,7 +38,7 @@ import func from './vue-temp/vue-editor-bridge';
             <div>
                 <form class="form-inline">
                     <div class="form-group">
-                        <input type="button" class="form-control hide" @click="exportAttendance()" value="导出查询结果" id="exportExcel"/>
+                        <input type="button" class="form-control btn btn-info hide" @click="exportAttendance()" value="导出查询结果" id="exportExcel"/>
                     </div>
                 </form>
             </div>
@@ -60,18 +63,22 @@ import func from './vue-temp/vue-editor-bridge';
                     </el-table-column>
                     <el-table-column
                         prop="attendanceDate"
+                        :formatter="formatterDate"
                         label="考勤日期">
                     </el-table-column>
                     <el-table-column
                         prop="startTime"
+                        :formatter="formatterStartTime"
                         label="上班打卡时间">
                     </el-table-column>
                     <el-table-column
                         prop="endTime"
+                        :formatter="formatterEndTime"
                         label="下班打卡时间">
                     </el-table-column>
-                    <el-table-column
+                    <el-table-column 
                         prop="status"
+                        :formatter="formatterColumn"
                         label="状态">
                     </el-table-column>
                 </el-table>
@@ -96,11 +103,12 @@ import func from './vue-temp/vue-editor-bridge';
 
 export default {
     data () { 
-        return { 
+        return {
+        DateValue: '',
         tableData: [], 
         currentPage:1, 
         pagesize:10, 
-        total:100
+        total:0
         } 
     },     
 
@@ -139,7 +147,6 @@ export default {
         //组合查询
        searchAttendance:function(){
            let self = this;
-           this.$message.warning("进入方法");
            // 校验查询条件
             var deptNumber = $("#companySelect").val();
             var deptName = $("#companySelect option:selected").text();
@@ -148,29 +155,39 @@ export default {
                 return;
             }
             var workNumber = $("#empSelect").val();
-            var attenDate = $("#attendanceDate").val();
+            var attenDate = this.DateValue;
+            if(attenDate==""||attenDate==null){
+                alert("请选择时间");
+                return;
+            }
             var params = new URLSearchParams();
-           // var pageSize=10;
-            //var pageNumber=1;
-            alert("--"+self.currentPage);
+        
             params.append("deptNumber", deptNumber);
             params.append("workNumber", workNumber);
             params.append("deptName", deptName);
+            params.append("attendanceDate",attenDate);
             params.append("pageNumber",self.currentPage);
             params.append("pageSize",self.pagesize);
             
             this.$http.post(this.HOST+"/attendance/getAttendanceRecord",params)
             .then(function(res){
+                console.log(self.tableData);
               self.tableData=res.data.data.data;
               self.total=res.data.data.totalCount;
-                 console.log(self.tableData);
+              $("#exportExcel").removeClass("hide");
             })
            
+        },
+        //导出
+        exportAttendance:function(){
+            $("#attendanceForm").attr("action",this.HOST+"/attendance/export");
+            var attenDate = new Date($("#attendanceDate").val());
+            $("#attendanceDateInput").val(attenDate);
+            $("#attendanceForm").submit();
         },
         //每页显示数据量变更
         handleSizeChange: function(val) {
             this.pagesize = val;
-            alert(val)
             this.searchAttendance(this.currentPage, this.pagesize);
         },
 
@@ -178,8 +195,59 @@ export default {
         handleCurrentChange: function(val) {
             this.currentPage = val;
             this.searchAttendance(this.currentPage, this.pagesize);
-        },    
-       //
+        }, 
+         //状态改成汉字
+        formatterColumn(row, column) {
+            switch(row.status){
+                // 0：正常，1：迟到，2：早退，3：迟到早退，4：旷工，5：异常，6：请假，7：调休）
+                
+                case 0:
+                return '正常';
+                break;
+
+                case 1:
+                return '迟到';
+                break;
+
+                case 2:
+                return '早退';
+                break;
+            
+                case 3:
+                return '迟到早退';
+                break;
+
+                case 4:
+                return '旷工';
+                break;
+
+                case 5:
+                return '异常';
+                break;
+
+                case 6:
+                return '请假';
+                break;
+
+                case 7:
+                return '调休';
+                break;
+
+                default:
+                return '未知';
+            }
+        }, 
+        //对时间进行处理
+        formatterDate(row,column){
+            return Format(new Date(row.attendanceDate),"yyyy-MM-dd")
+           
+        },
+        formatterStartTime(row,column){
+            return Format(new Date(row.startTime)," HH:mm")
+        },
+        formatterEndTime(row,column){
+            return Format(new Date(row.endTime)," HH:mm")
+        },
        //excel导入操作
        importAttendance : function(){
            var formData = new FormData($("#importForm")[0]);
@@ -201,14 +269,11 @@ export default {
 }
 </script>
 <style>
-    .Wdate{
-            background-image:url('/static/js/My97DatePicker/skin/datePicker.gif');
-        }
-    label{
-            margin:0 5px;
-        }
-    .exportHide{
-        display: none;
-    }
+label {
+  margin: 0 5px;
+}
+.exportHide {
+  display: none;
+}
 </style>
 
