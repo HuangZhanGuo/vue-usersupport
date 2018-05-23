@@ -6,6 +6,8 @@ import register from '../components/register/register'
 import index from '../components/common/index'
 import attendance from '../components/attendance/attendance'
 import acount from '../components/attendance/acount'
+import managerment from '../components/userManagerment/managerment'
+import loginRecord from '../components/userManagerment/loginRecord'
 Vue.use(Router)
 
 export default new Router({
@@ -40,6 +42,14 @@ export default new Router({
         {
           path: '/attendance/acount',
           component: acount
+        },
+         {
+          path: '/um/managerment',
+          component: managerment
+        },
+         {
+          path: '/um/loginRecord',
+          component: loginRecord
         }
       ]
     }
