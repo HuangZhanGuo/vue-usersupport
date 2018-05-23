@@ -14,11 +14,11 @@
 				</tr>
 				<!-- <tr>
 					<td><span>验证码:&nbsp; </span></span></td>
-					<td><input type="text" name="verityCode" class="verityCode" id="myVerityCode" onchange="javascript:blurForVerityCode();"/></td>
-				</tr> -->
-				<!-- <tr>
+					<td><input type="text" name="verityCode" class="verityCode" id="myVerityCode" @change="blurForVerityCode();"/></td>
+				</tr>
+			  <tr>
 					<td colspan="2">
-						<img src="/verity/verityImg" class="verityImg" id="myVerityImg"/>
+						<img src="this.HOST+'/verity/verityImg'" class="verityImg" id="myVerityImg"/>
 						<a id="btn_changeVerityImg" href="javascript:changeVerityImg()">换一张</a>
 					</td>
 				</tr> -->

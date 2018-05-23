@@ -155,21 +155,21 @@ export default {
           var year=null;
           var month=null;
           if(type==1){
-            year=startTime;
-            month = null;
+            year=new Date(startTime);
           }
           if(type==0){
-            month=startTime;
-            year = null;
+            month=new Date(startTime);
           }
-          alert(month);
           var params = new URLSearchParams();
-        
           params.append("deptNumber", deptNumber);
           params.append("workNumber", workNumber);
           params.append("attendanceDate",startTime);
-        //   params.append("year",year);
-        //   params.append("month",month);
+          if(year!=null){
+            params.append("year",year);
+          }
+          if(month!=null){
+             params.append("month",month);
+          }
           params.append("pageNumber",self.currentPage);
           params.append("pageSize",self.pagesize);
           this.$http.post(this.HOST+"/attendance/getAcountAll",params)
