@@ -9,16 +9,16 @@
 					<td><input class="user-write-input" type="text" name="username" v-model="user.username" placeholder="用户名/联系手机/邮箱"></td>
 				</tr>
 				<tr>
-					<td><span>通行码:&nbsp; </span></span></td>
+					<td><span>通行码:&nbsp; </span></td>
 					<td><input class="user-write-input" type="password" name="password" v-model="user.password"></td>
 				</tr>
 				<!-- <tr>
 					<td><span>验证码:&nbsp; </span></span></td>
-					<td><input type="text" name="verityCode" class="verityCode" id="myVerityCode" @change="blurForVerityCode();"/></td>
-				</tr>
-			  <tr>
+					<td><input type="text" name="verityCode" class="verityCode" id="myVerityCode" onchange="javascript:blurForVerityCode();"/></td>
+				</tr> -->
+				<!-- <tr>
 					<td colspan="2">
-						<img src="this.HOST+'/verity/verityImg'" class="verityImg" id="myVerityImg"/>
+						<img src="/verity/verityImg" class="verityImg" id="myVerityImg"/>
 						<a id="btn_changeVerityImg" href="javascript:changeVerityImg()">换一张</a>
 					</td>
 				</tr> -->
@@ -49,6 +49,7 @@
 import Header from "./header.vue";
 import $ from "jquery";
 
+
 export default {
   
   data() {
@@ -75,8 +76,11 @@ export default {
      
       this.$http
         .post(this.HOST + "/login", params)
-        .then(function(response) {
+        .then((response)=> {
           if (response.data.code == 1) {
+          sessionStorage.setItem("isLogin",true); 
+          this.$store.dispatch('login',true);
+    
             window.location.href = "#/index";
           }
           if (response.data.code == 0) {

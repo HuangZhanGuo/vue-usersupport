@@ -5,12 +5,11 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App'
 import router from './router'
-import axios from 'axios'
-
+import axios from 'axios' 
+import store from './vuex/store'
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.use(ElementUI);
-
 
 import '../static/css/bootstrap.min.css'
 import '../static/css/bootstrap-theme.min.css'
@@ -23,6 +22,7 @@ Vue.prototype.HOST = '/api'
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
