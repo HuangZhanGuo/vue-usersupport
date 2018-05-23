@@ -80,11 +80,17 @@ export default {
           if (response.data.code == 1) {
           sessionStorage.setItem("isLogin",true); 
           this.$store.dispatch('login',true);
-    
+          this.$message({
+            message: '登录成功',
+            type: 'success'
+          });
             window.location.href = "#/index";
           }
           if (response.data.code == 0) {
-            alert(response.data.msg);
+            this.$message({
+              message: response.data.msg,
+              type: 'warning'
+            });
           }
         })
         .catch(function(error) {

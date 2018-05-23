@@ -155,6 +155,14 @@ export default {
           var startTime = this.DateValue;
           var workNumber = $("#empSelect").val();
           var deptNumber = $("#companySelect").val();
+          if(deptNumber == "" || deptNumber == null){
+                this.$message('请选择部门');
+                return;
+          }
+          if(startTime==""||startTime==null){
+                this.$message('请选择时间');
+                return;
+          }
           var year=null;
           var month=null;
           if(type==1){

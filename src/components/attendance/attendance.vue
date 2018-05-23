@@ -155,13 +155,14 @@ export default {
             var deptNumber = $("#companySelect").val();
             var deptName = $("#companySelect option:selected").text();
             if(deptNumber == "" || deptNumber == null){
-                alert("请选择部门");
+                
+                this.$message('请选择部门');
                 return;
             }
             var workNumber = $("#empSelect").val();
             var attenDate = this.DateValue;
             if(attenDate==""||attenDate==null){
-                alert("请选择时间");
+                this.$message('请选择时间');
                 return;
             }
             var params = new URLSearchParams();
