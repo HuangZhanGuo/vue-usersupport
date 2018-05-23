@@ -181,7 +181,7 @@ export default {
             })
         },
         dept:function(row,column){
-            return row.deptNumber=this.deptNumber;
+            return row.deptNumber="技术部";
         },
         //每页显示数据量变更
         handleSizeChange: function(val) {
