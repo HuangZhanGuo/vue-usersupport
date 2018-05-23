@@ -29,6 +29,7 @@
         </form>
         <div>
             <el-table
+                v-loading="loading2"
                 :data="tableData"
                 style="width: 100%">
                 <el-table-column
@@ -110,7 +111,8 @@ export default {
         tableData: [], 
         currentPage:1, 
         pagesize:10, 
-        total:0
+        total:0,
+        loading2:false
         } 
     },  
     created(){//加载页面执行事
@@ -147,8 +149,9 @@ export default {
         },
         //组合查询
         search:function(type){
-        alert(type);
+        
           let self = this;
+          self.loading2=true;
           var startTime = this.DateValue;
           var workNumber = $("#empSelect").val();
           var deptNumber = $("#companySelect").val();
@@ -174,6 +177,7 @@ export default {
           params.append("pageSize",self.pagesize);
           this.$http.post(this.HOST+"/attendance/getAcountAll",params)
             .then(function(res){
+                self.loading2=false;
              console.log(self.tableData);
               self.tableData=res.data.data.data;
               self.total=res.data.data.totalCount;
