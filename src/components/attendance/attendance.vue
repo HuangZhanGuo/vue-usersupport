@@ -45,6 +45,7 @@
 
             <div>
                 <el-table
+                    v-loading="loading2"
                     :data="tableData"
                     style="width: 100%">
                     <el-table-column
@@ -108,7 +109,8 @@ export default {
         tableData: [], 
         currentPage:1, 
         pagesize:10, 
-        total:0
+        total:0,
+        loading2:false
         } 
     },     
 
@@ -146,7 +148,9 @@ export default {
         },
         //组合查询
        searchAttendance:function(){
+           
            let self = this;
+           self.loading2=true;
            // 校验查询条件
             var deptNumber = $("#companySelect").val();
             var deptName = $("#companySelect option:selected").text();
@@ -171,6 +175,7 @@ export default {
             
             this.$http.post(this.HOST+"/attendance/getAttendanceRecord",params)
             .then(function(res){
+                self.loading2=false;
                 console.log(self.tableData);
               self.tableData=res.data.data.data;
               self.total=res.data.data.totalCount;
