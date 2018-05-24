@@ -2,6 +2,7 @@
 <div>
 <el-header style="height: 50px; text-align: left; font- : 12px; background-color: #31263D">
   <span style="color: #FFFFFF; font-size: 18px; padding-bottom: -10px">笑脸金融客服助手管理系统 V1.1.0</span>
+	<span class="loginout"><el-button type="danger" round @click="login_out">注销</el-button></span>
 </el-header>
 <el-container style="height: 590px; border: 1px solid #eee">
   <el-aside width="160px" style="background-color: #31263D">
@@ -24,7 +25,7 @@
 </div>
 </template>
 
-<style>
+<style scoped>
   .el-header {
     background-color: #B3C0D1;
     color: #333;
@@ -34,9 +35,13 @@
   .el-aside {
     color: #333;
   }
+	.loginout{
+	position: absolute;
+	right: 10px;
+}
 </style>
 
-<script>
+<script scode>
 
   export default {
 	name: 'index',
@@ -101,12 +106,12 @@
 					subItems:  [
 						{
 							name: '客户服务',
-							url: '/customer/customerRecord',
+							url: '/customerService/customerRecord',
 							code: '4-1'
 						},
 						{
 							name: '服务列表',
-							url: '/customer/showService',
+							url: '/customerService/showService',
 							code: '4-2'
 						}
 					]
@@ -190,6 +195,13 @@
 					]
 				}
 			]
+		}
+	},
+	methods:{
+		login_out:function(){
+    sessionStorage.removeItem("isLogin")
+    this.$store.dispatch('login',false);
+    window.location.href = "#/";
 		}
 	},
 	component : {
