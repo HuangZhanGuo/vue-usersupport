@@ -11,6 +11,8 @@ import managerment from '../components/userManagerment/managerment'
 import loginRecord from '../components/userManagerment/loginRecord'
 import showService from '../components/customerService/showService'
 import customerRecord from '../components/customerService/customerRecord'
+import baseInfomation from '../components/systemConfig/base_infomation'
+import resetPassword from '../components/systemConfig/reset_password'
 Vue.use(Router)
 
 const router = new Router({
@@ -31,12 +33,12 @@ const router = new Router({
       component: index,
       children: [
         {
-          path: '/r',
-          component: register
+          path: '/sc/base_infomation',
+          component: baseInfomation
         },
         {
-          path: '/l',
-          component: login
+          path: '/sc/reset_password',
+          component: resetPassword
         },
         {
           path: '/attendance/attendance',
@@ -45,6 +47,10 @@ const router = new Router({
         {
           path: '/attendance/acount',
           component: acount
+        },
+        {
+         path: '/um/addUser',
+         component: register
         },
          {
           path: '/um/managerment',

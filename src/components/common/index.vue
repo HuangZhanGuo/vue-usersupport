@@ -54,13 +54,13 @@
 					subItems:  [
 						{
 							name: '基本信息',
-							url: '/r',
+							url: '/sc/base_infomation',
 							isSubItemShow: false,
 							code: '1-1'
 						},
 						{
 							name: '修改密码',
-							url: '/l',
+							url: '/sc/reset_password',
 							isSubItemShow: false,
 							code: '1-2'
 						}
