@@ -11,6 +11,7 @@ import managerment from '../components/userManagerment/managerment'
 import loginRecord from '../components/userManagerment/loginRecord'
 import showService from '../components/customerService/showService'
 import customerRecord from '../components/customerService/customerRecord'
+
 Vue.use(Router)
 
 const router = new Router({

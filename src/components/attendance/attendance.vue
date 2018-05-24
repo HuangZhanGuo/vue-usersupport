@@ -159,6 +159,27 @@ export default {
            let self = this;
            self.loading2=true;
            // 校验查询条件
+           if(self.value==null||self.value==''){
+              this.$message({
+                message: '请选择部门',
+                type: 'warning'
+                });
+                return;
+           }
+           if(self.nameValue==null||self.nameValue==''){
+                this.$message({
+                message: '请选择人员',
+                type: 'warning'
+                });
+                return;
+           }
+           if(self.DateValue==null||self.DateValue==''){
+                this.$message({
+                message: '请选择日期',
+                type: 'warning'
+                });
+                return;
+           }
             var params = new URLSearchParams();
             params.append("workNumber", self.nameValue);
             params.append("deptNumber", self.value);
