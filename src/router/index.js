@@ -6,6 +6,8 @@ import header from '../components/login/header'
 import register from '../components/register/register'
 import index from '../components/common/index'
 import attendance from '../components/attendance/attendance'
+import moneyRecord from '../components/logManagement/moneyRecord'
+import generalJournal from '../components/logManagement/generalJournal'
 import acount from '../components/attendance/acount'
 import managerment from '../components/userManagerment/managerment'
 import loginRecord from '../components/userManagerment/loginRecord'
@@ -58,6 +60,13 @@ const router = new Router({
         {
           path: '/customerService/showService',
           component: showService,
+          },{
+            path: '/logManagement/moneyRecord',
+            component: moneyRecord
+          },
+          {
+            path: '/logManagement/generalJournal',
+            component: generalJournal
           },
           {
           path: '/customerService/customerRecord',
