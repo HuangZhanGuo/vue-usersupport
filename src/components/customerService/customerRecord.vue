@@ -1,30 +1,15 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <div th:include="common/head_info::head_infor"></div>
-    <script type="text/javascript" th:src="@{../js/moment-with-locales.min.js}"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{../css/bootstrap-datetimepicker.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{../css/uploadImg.css}">
-    <script type="text/javascript" th:src="@{../js/bootstrap-datetimepicker.js}"></script>
-    <script type="text/javascript" th:src="@{../js/bootstrap-datetimepicker.zh-CN.js}"></script>
-    <script type="text/javascript" th:src="@{../js/customerRecord.js}"></script>
-    <script type="text/javascript" th:src="@{../js/layer.js}"></script>
-</head>
-<body>
+<template>
 <!--问题详情-->
-<div>
-    <button type="button" id="start" class="btn btn-info" onclick="startServer('solveProblem')">开始服务</button></div>
-<div class="container center" style="margin-top: 20px;display:none;" id="solveProblem">
+<div id='customerRecord'>
+<div class="container center" style="margin-top: 20px;" id="solveProblem">
     <form  id="formData">
     <!--客户信息-->
     <div class="container center" style="width:100%;">
         <div class="container center" style="width:100%;">
             <form class="navbar-form navbar-left" role="search" >
                 <div class="form-group">
-                    电话：<input type="text" class="form-control" name="phoneNumber"  id="phoneNumber" placeholder="请输入电话号码">
-                    客户姓名：<input type="text" class="form-control"  name="name" id="name" placeholder="请输入客户姓名">
+                    电话：<input type="text" v-model="phoneNumber" class="form-control" name="phoneNumber"  id="phoneNumber" placeholder="请输入电话号码">
+                    客户姓名：<input type="text" v-model="name" class="form-control"  name="name" id="name" placeholder="请输入客户姓名">
 
                 </div>
             </form>
@@ -42,15 +27,16 @@
 
         <div class="form-group">
             <label for="title">问题标题</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="请输入问题标题">
+            <input type="text" v-model="title" class="form-control" id="title" name="title" placeholder="请输入问题标题">
         </div>
         <div class="form-group">
             <label for="description">问题详情</label>
-            <textarea class="form-control" rows="3" id="description" name="description"></textarea>
+            <textarea class="form-control" v-model="description" rows="3" id="description" name="description"></textarea>
         </div>
         <div class="form-group">
             <label for="solve">问题处理</label>
-            <textarea class="form-control" rows="3" id="solve" name="solve"></textarea>
+            <textarea class="form-control" v-model="solve" rows="3" id="solve" name="solve"></textarea>
+        
         </div>
         <div class="form-group">
             <label for="file">图片</label>
@@ -69,5 +55,20 @@
 </div>
 
 </div>
-</body>
-</html>
+</template>
+
+<script>
+export default {
+     data() {
+         return{
+             msg:数据,
+            phoneNumber:'',
+            name:'',
+            title:''
+            }
+     },
+  methods: {
+
+  }
+}
+</script>
