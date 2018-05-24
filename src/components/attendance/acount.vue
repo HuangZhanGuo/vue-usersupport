@@ -90,7 +90,7 @@
             </el-table>
         </div>
         <div align="center">
-              <el-pagination
+            <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
                 :current-page="currentPage"
@@ -145,11 +145,9 @@ export default {
                     }
                     $("#empSelect").append(str);
             })
-          
         },
         //组合查询
         search:function(type){
-        
           let self = this;
           self.loading2=true;
           var startTime = this.DateValue;
@@ -189,7 +187,6 @@ export default {
              console.log(self.tableData);
               self.tableData=res.data.data.data;
               self.total=res.data.data.totalCount;
-              
             })
         },
         dept:function(row,column){
