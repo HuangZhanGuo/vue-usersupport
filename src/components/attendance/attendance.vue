@@ -1,31 +1,45 @@
 
 <template>
-  
     <div id="content">
         <div class="container-fluid">
-
-            <form id="attendanceForm" style="padding-top: 15px; float: left;width: 90%;" class="form-inline" method="post" action="">
+            <el-form :inline="true" id="attendanceForm" style="padding-top: 15px; float: left;width: 90%;" class="form-inline" method="post" action="">
                 <div class="form-group">
-                    <label class="labe_l" for="companySelect">部门:</label>
-                    <select id="companySelect" class="form-control" name="deptNumber" v-model="deptNumber" @change="changeCount()">
-                        <option value="">--请选择部门--</option>
-                    </select>
-                    <input type="hidden" id="deptNameInput" name="deptName" value="">
-                    <label class="labe_l" for="empSelect">人员:</label>
-                    <select id="empSelect" class="form-control" v-model="workNumber" name="workNumber">
-                        <option value="">--请选择--</option>
-                    </select>
-                    <label class="labe_l" for="attendanceDate">考勤时间:</label>
-                    <!--<input type="text" class="form_datetime form-control" id="attendanceDate" readonly>-->
+                   <el-form-item label="部门:">
+                <el-select v-model="value" id="dept" placeholder="请选择" @change="changeCount()">
+                    <el-option
+                        v-for="item in options"
+                        :key="item.deptNumber"
+                        :label="item.deptName"
+                        :value="item.deptNumber">
+                    </el-option>
+                </el-select>
+                </el-form-item>
+                <el-form-item label="人员:">
+                <el-select v-model="nameValue" placeholder="请选择">
+                    <el-option 
+                        v-for="item in nameOptions"
+                        :key="item.workNumber"
+                        :label="item.name"
+                        :value="item.workNumber">
+                    </el-option>
+
+                </el-select>
+                </el-form-item>
+                <el-form-item label="考勤时间">
                     <el-date-picker
-                        v-model="DateValue"
-                        type="date"
-                        placeholder="选择日期"
-                        format="yyyy 年 MM 月 dd 日">
+                    id="attendanceDate"
+                    v-model="DateValue"
+                    type="date"
+                    placeholder="选择日期"
+                    format="yyyy 年 MM 月 dd 日">
                     </el-date-picker>
+                </el-form-item>
+                    <input type="hidden" id="attendanceDateInput" name="attendanceDate" value="">
                 </div>
-                <span class="btn btn-primary" v-on:click="searchAttendance">查询</span>
-            </form>
+               <el-form-item>
+                    <el-button type="primary" @click="searchAttendance()">查询</el-button>
+                </el-form-item>
+            </el-form>
 
             <form id="importForm" enctype="multipart/form-data" style="padding-top: 15px;float: right">
                 <span style="float: right">
@@ -35,14 +49,13 @@
 
             <div style="clear: both"></div>
 
-            <div>
+          <div>
                 <form class="form-inline">
                     <div class="form-group">
                         <input type="button" class="form-control btn btn-info hide" @click="exportAttendance()" value="导出查询结果" id="exportExcel"/>
                     </div>
                 </form>
             </div>
-
             <div>
                 <el-table
                     v-loading="loading2"
@@ -105,6 +118,10 @@
 export default {
     data () { 
         return {
+        options:[],
+        nameOptions:[],
+        value: '',
+        nameValue:'',
         DateValue: '',
         tableData: [], 
         currentPage:1, 
@@ -116,33 +133,23 @@ export default {
 
     created(){//加载页面执行事
             //初始化部门
+            let self = this; 
             this.$http.post(this.HOST + '/dept/getAllDept')
             .then(function (response) {
-            var depts=response.data.data;
-            console.log(depts);
-                var str = "";
-                for(var i = 0; i < depts.length; i++){
-                    str += "<option value='"+depts[i].deptNumber+"'>"+depts[i].deptName+"</option>"
-                }
-                $("#companySelect").append(str);
+                self.options=response.data.data;
+                
             })
             
         },  
     methods:{
         //初始化成员
         changeCount:function() {
+            let self = this;
             var params = new URLSearchParams();
-            params.append('deptNumber', this.deptNumber);
-            var deptName = $("#companySelect option:selected").text();
+            params.append('deptNumber',self.value);
             this.$http.post(this.HOST + '/emp/getEmpListByDeptNumber',params)
             .then(function (response) {
-                $("#empSelect").html("<option value=''>--请选择--</option>");
-                var empList = response.data.data;
-                var str = "";
-                for(var i = 0; i < empList.length; i++){
-                    str += "<option value='"+empList[i].workNumber+"'>"+empList[i].name+"</option>"
-                }
-                $("#empSelect").append(str);
+                self.nameOptions= response.data.data; 
             })
           
         },
@@ -152,25 +159,31 @@ export default {
            let self = this;
            self.loading2=true;
            // 校验查询条件
-            var deptNumber = $("#companySelect").val();
-            var deptName = $("#companySelect option:selected").text();
-            if(deptNumber == "" || deptNumber == null){
-                
-                this.$message('请选择部门');
+           if(self.value==null||self.value==''){
+              this.$message({
+                message: '请选择部门',
+                type: 'warning'
+                });
                 return;
-            }
-            var workNumber = $("#empSelect").val();
-            var attenDate = this.DateValue;
-            if(attenDate==""||attenDate==null){
-                this.$message('请选择时间');
+           }
+           if(self.nameValue==null||self.nameValue==''){
+                this.$message({
+                message: '请选择人员',
+                type: 'warning'
+                });
                 return;
-            }
+           }
+           if(self.DateValue==null||self.DateValue==''){
+                this.$message({
+                message: '请选择日期',
+                type: 'warning'
+                });
+                return;
+           }
             var params = new URLSearchParams();
-        
-            params.append("deptNumber", deptNumber);
-            params.append("workNumber", workNumber);
-            params.append("deptName", deptName);
-            params.append("attendanceDate",attenDate);
+            params.append("workNumber", self.nameValue);
+            params.append("deptNumber", self.value);
+            params.append("attendanceDate",self.DateValue);
             params.append("pageNumber",self.currentPage);
             params.append("pageSize",self.pagesize);
             
@@ -184,12 +197,14 @@ export default {
             })
            
         },
+       
         //导出
-        exportAttendance:function(){
-            $("#attendanceForm").attr("action",this.HOST+"/attendance/export");
-            var attenDate = new Date($("#attendanceDate").val());
-            $("#attendanceDateInput").val(attenDate);
-            $("#attendanceForm").submit();
+       exportAttendance:function(){
+            alert("进入方法");
+        $("#attendanceForm").attr("action",this.HOST+"/attendance/export");
+        var attenDate = new Date($("#attendanceDate").val());
+        $("#attendanceDateInput").val(attenDate);
+        $("#attendanceForm").submit();
         },
         //每页显示数据量变更
         handleSizeChange: function(val) {
@@ -256,6 +271,7 @@ export default {
         },
        //excel导入操作
        importAttendance : function(){
+           alert("进入方法");
            var formData = new FormData($("#importForm")[0]);
            this.$http
             .post(this.HOST + "/attendance/import",formData)

@@ -90,12 +90,12 @@
 					subItems:  [
 						{
 							name: '资金记录',
-							url: '/money/moneyRecord',
+							url: '/logManagement/moneyRecord',
 							code: '3-1'
 						},
 						{
 							name: '资金流水',
-							url: '/log/generalJournal',
+							url: '/logManagement/generalJournal',
 							code: '3-2'
 						}
 					]

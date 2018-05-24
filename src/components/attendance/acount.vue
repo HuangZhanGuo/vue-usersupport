@@ -2,8 +2,6 @@
     <div id="content">
     <div class="container-fluid">
         <form class="form-inline">
-
-
             <div class="form-group" style="padding: 15px 0;">
                 <label class="labe_l">考勤时间:</label>
                 <!--<input type="text" class="form_datetime form-control" id="datetimeStart" name="startTime" readonly>-->
@@ -14,18 +12,18 @@
                         format="yyyy 年 MM 月 dd 日">
                  </el-date-picker>
                 <label class="labe_l" for="companySelect">部门:</label>
-                <select id="companySelect" class="form-control" name="deptNumber" v-model="deptNumber"  @change="getEmpByNumber()">
-                    <option value="">--请选择部门--</option>
-                </select>
-                <input type="hidden" id="deptNameInput" name="deptName" value="">
+                <el-select id="companySelect" v-model="deptValue" name="deptNumber"  @change="getEmpByNumber()">
+                    <el-option v-for="item in depts" :key="item.deptNumbe" :label="item.deptName" :value="item.deptNumber"></el-option>
+                </el-select> 
+                <!-- <input type="hidden" id="deptNameInput" name="deptName" value=""> -->
                 <label class="labe_l" for="tempSelec">人员:</label>
-                <select id="empSelect" class="form-control" name="workNumber">
-                    <option value="">--请选择--</option>
-                </select>
+                <el-select id="empSelect" v-model="deptEmpValue" name="workNumber">
+                    <el-option v-for="item in deptEmp" :key="item.workNumber" :label="item.name" :value="item.workNumber"></el-option>
+                </el-select>
             </div>
-            <span class="btn btn-primary" @click="search(1)" style="margin-left: 10px;">按年统计</span>
-            <span class="btn btn-primary" @click="search(0)" style="margin: 0 10px;">按月统计</span>
-            <span class="btn btn-default" @click="search(2)">查询</span>
+            <el-button type="primary"  @click="search(1)" style="margin-left: 10px;">按年</el-button>
+            <el-button type="primary"  @click="search(0)" style="margin: 0 10px;">按月</el-button>
+            <el-button @click="search(2)">查询</el-button>
         </form>
         <div>
             <el-table
@@ -43,8 +41,7 @@
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="deptNumber"
-                    :formatter="dept"
+                    prop="deptName"
                     label="部门">
                 </el-table-column>
                 <el-table-column
@@ -112,38 +109,40 @@ export default {
         currentPage:1, 
         pagesize:10, 
         total:0,
-        loading2:false
+        loading2:false,
+        depts:[],
+        deptEmp:[],
+        deptValue:'',
+        deptEmpValue:''
+
         } 
     },  
     created(){//加载页面执行事
             //初始化部门
+            let self = this;
             this.$http.post(this.HOST + '/dept/getAllDept')
-            .then(function (response) {
-            var depts=response.data.data;
-            console.log(depts);
-                var str = "";
-                for(var i = 0; i < depts.length; i++){
-                    str += "<option value='"+depts[i].deptNumber+"'>"+depts[i].deptName+"</option>"
-                }
-                $("#companySelect").append(str);
+            .then(function (response){
+                self.depts = response.data.data;
             })
             
         },  
     methods:{
              //初始化成员
             getEmpByNumber:function() {
+                let self = this;
                 var params = new URLSearchParams();
-                params.append('deptNumber', this.deptNumber);
-                var deptName = $("#companySelect option:selected").text();
+                params.append('deptNumber', self.deptValue);
+                // var deptName = $("#companySelect option:selected").text();
                 this.$http.post(this.HOST + '/emp/getEmpListByDeptNumber',params)
                 .then(function (response) {
-                    $("#empSelect").html("<option value=''>--请选择--</option>");
-                    var empList = response.data.data;
-                    var str = "";
-                    for(var i = 0; i < empList.length; i++){
-                        str += "<option value='"+empList[i].workNumber+"'>"+empList[i].name+"</option>"
-                    }
-                    $("#empSelect").append(str);
+                    // $("#empSelect").html("<el-option value=''>--请选择--</el-option>");
+                    // var empList = response.data.data;
+                    // var str = "";
+                    // for(var i = 0; i < empList.length; i++){
+                    //     str += "<el-option value='"+empList[i].workNumber+"'>"+empList[i].name+"</el-option>"
+                    // }
+                    // $("#empSelect").append(str);
+                    self.deptEmp = response.data.data;
             })
           
         },
@@ -153,8 +152,10 @@ export default {
           let self = this;
           self.loading2=true;
           var startTime = this.DateValue;
-          var workNumber = $("#empSelect").val();
-          var deptNumber = $("#companySelect").val();
+        //   var workNumber = $("#empSelect").val();
+        //   var deptNumber = $("#companySelect").val();
+          var workNumber = self.deptEmpValue;
+          var deptNumber = self.deptValue;
           if(deptNumber == "" || deptNumber == null){
                 this.$message('请选择部门');
                 return;
@@ -189,7 +190,6 @@ export default {
              console.log(self.tableData);
               self.tableData=res.data.data.data;
               self.total=res.data.data.totalCount;
-              
             })
         },
         dept:function(row,column){
