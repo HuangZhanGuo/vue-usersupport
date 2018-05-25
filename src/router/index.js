@@ -15,6 +15,7 @@ import showService from '../components/customerService/showService'
 import customerRecord from '../components/customerService/customerRecord'
 import baseInfomation from '../components/systemConfig/base_infomation'
 import resetPassword from '../components/systemConfig/reset_password'
+import userManager from '../components/permissionManagerment/userManager'
 
 Vue.use(Router)
 
@@ -50,6 +51,10 @@ const router = new Router({
         {
           path: '/attendance/acount',
           component: acount
+        },
+        {
+          path: '/pm/userManager',
+          component: userManager
         },
         {
          path: '/um/addUser',

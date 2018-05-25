@@ -201,7 +201,7 @@ export default {
 </script>
 <style>
     label{
-            margin:0 5px;
-        }
+        margin:0 5px;
+    }
 </style>
 

@@ -122,17 +122,17 @@
 					subItems:  [
 						{
 							name: '用户角色管理',
-							url: '/role/userManage',
+							url: '/pm/userManager',
 							code: '5-1'
 						},
 						{
 							name: '角色管理',
-							url: '/role/userManage',
+							url: '/pm/roleManager',
 							code: '5-2'
 						},
 						{
 							name: '资源管理',
-							url: '/menu/menuManage',
+							url: '/pm/menuManager',
 							code: '5-3'
 						}
 					]
