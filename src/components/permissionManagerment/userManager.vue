@@ -43,20 +43,19 @@
                 </el-pagination>
             </div>
             <el-dialog title="授权管理" :visible.sync="dialogTableVisible" style="padding: 40px 160px;">
-                <el-table :data="gridData">
+                <el-table 
+                    :data="gridData"
+                    ref="multipleTable"
+                    tooltip-effect="dark"
+                    @selection-change="handleSelectionChange">
                     <el-table-column
-                        fixed="left"
-                        label="操作"
-                        width="150">
-                        <template slot-scope="scope">
-                            <el-checkbox ></el-checkbox>
-                        </template>
+                        type="selection">
                     </el-table-column>
                     <el-table-column property="roleName" label="角色名" width="200"></el-table-column>
                     <el-table-column property="description" label="描述"></el-table-column>
                 </el-table>
 
-                <el-button type="text" size="big"  @click="openDialogForAuthorization">取消</el-button>
+                <el-button type="text" size="big"  @click="consuleThisDialog">取消</el-button>
                 <el-button type="text" size="big"  @click="updateAuthorization">修改</el-button>
             </el-dialog>
         </div>
@@ -80,16 +79,38 @@ export default {
             total:0,
             gridData: [],
             dialogTableVisible: false,
-            checked: true,
+            multipleSelection: [],
+            currentLoginUserId: ""
         }
     },
     methods: {
         updateAuthorization: function() {
             var ids = new Array();
-            $("input:checkbox:checked").each(function () {
-                ids.push($(this).attr("value"));
-            });
-            console.log(ids);
+            for(var i = 0; i< this.multipleSelection.length; i++) {
+                ids.push(this.multipleSelection[i].roleId);
+            }
+            var params = new URLSearchParams();
+            params.append("ids[]", ids);
+            params.append("id", this.currentLoginUserId);
+            this.$http.post(this.HOST + "/role/updateRole", params)
+            .then((response)=> {
+                console.log(response.data);
+                if (response.data.code == 200) {
+                    this.$message({
+                        message: '授权成功',
+                        type: 'success'
+                    });
+                } else {
+                    this.$message({
+                    message: "授权异常。请刷新页面或重新登录后尝试。",
+                    type: 'error'
+                    });
+                }
+            })
+        },
+        consuleThisDialog: function() {
+            //关闭修改权限的模态框
+            this.dialogTableVisible = false;
         },
         //组合查询
         search:function(){
@@ -99,7 +120,6 @@ export default {
           params.append("length", self.pagesize);
           this.$http.post(this.HOST + "/role/findUserByPage", params)
             .then((response)=> {
-                console.log(response.data);
                 if (response.data.code == 1) {
                     self.tableData=response.data.data.data;
                     self.total=response.data.data.totalCount;
@@ -134,7 +154,6 @@ export default {
         //页码变更
         handleCurrentChange: function(val) {
             this.currentPage = val;
-
             this. search(this.currentPage, this.pagesize);
         },
         openDialogForAuthorization: function(row) {
@@ -144,11 +163,23 @@ export default {
             //获取当前用户的权限状态数据
             var params = new URLSearchParams();
             params.append("userId", row.userId);
+            //将当前登录用户的ID放于全局变量中，以便后面使用
+            self.currentLoginUserId = row.userId;
             this.$http.post(this.HOST + "/role/findRoleBegin", params)
                 .then((response)=> {
-                    console.log(response.data);
                     if (response.data.code == 200) {
                         self.gridData=response.data.data;
+                        var tempList = [];
+                        var j=0;
+                        for(var i=0; i< self.gridData.length; i++) {
+                            if(self.gridData[i].userId != null) {
+                                tempList[j]=self.gridData[i];
+                                j++;
+                            }
+                        }
+                        self.$nextTick(function(){
+                            self.checked(tempList);//每次更新了数据，触发这个函数即可。
+                        });
                         this.$message({
                             message: '查询成功',
                             type: 'success'
@@ -160,7 +191,26 @@ export default {
                         });
                     }
                 })
-        }
+           
+        },
+        toggleSelection(rows) {
+            if (rows) {
+            rows.forEach(row => {
+                this.$refs.multipleTable.toggleRowSelection(row);
+            });
+            } else {
+                this.$refs.multipleTable.clearSelection();
+            }
+        },
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
+        checked(tempList){
+              //首先el-table添加ref="table"引用标识
+            for(var i=0; i< tempList.length; i++) {
+                this.$refs.multipleTable.toggleRowSelection(tempList[i]);
+            }
+        },
     }
 }
 </script>
