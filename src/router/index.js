@@ -6,12 +6,21 @@ import header from '../components/login/header'
 import register from '../components/register/register'
 import index from '../components/common/index'
 import attendance from '../components/attendance/attendance'
+import moneyRecord from '../components/logManagement/moneyRecord'
+import generalJournal from '../components/logManagement/generalJournal'
 import acount from '../components/attendance/acount'
 import managerment from '../components/userManagerment/managerment'
 import loginRecord from '../components/userManagerment/loginRecord'
 import showService from '../components/customerService/showService'
 import customerRecord from '../components/customerService/customerRecord'
+
 import search from '../components/serviceManagerment/search'
+
+import baseInfomation from '../components/systemConfig/base_infomation'
+import resetPassword from '../components/systemConfig/reset_password'
+import userManager from '../components/permissionManagerment/userManager'
+import menuManager from '../components/permissionManagerment/menuManager'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -32,12 +41,12 @@ const router = new Router({
       component: index,
       children: [
         {
-          path: '/r',
-          component: register
+          path: '/sc/base_infomation',
+          component: baseInfomation
         },
         {
-          path: '/l',
-          component: login
+          path: '/sc/reset_password',
+          component: resetPassword
         },
         {
           path: '/attendance/attendance',
@@ -46,6 +55,18 @@ const router = new Router({
         {
           path: '/attendance/acount',
           component: acount
+        },
+        {
+          path: '/pm/userManager',
+          component: userManager
+        },
+        {
+          path: '/pm/menuManager',
+          component: menuManager
+        },
+        {
+         path: '/um/addUser',
+         component: register
         },
          {
           path: '/um/managerment',
@@ -58,6 +79,13 @@ const router = new Router({
         {
           path: '/customerService/showService',
           component: showService,
+          },{
+            path: '/logManagement/moneyRecord',
+            component: moneyRecord
+          },
+          {
+            path: '/logManagement/generalJournal',
+            component: generalJournal
           },
           {
           path: '/customerService/customerRecord',
