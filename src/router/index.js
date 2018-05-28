@@ -16,6 +16,7 @@ import customerRecord from '../components/customerService/customerRecord'
 import baseInfomation from '../components/systemConfig/base_infomation'
 import resetPassword from '../components/systemConfig/reset_password'
 import userManager from '../components/permissionManagerment/userManager'
+import menuManager from '../components/permissionManagerment/menuManager'
 
 Vue.use(Router)
 
@@ -55,6 +56,10 @@ const router = new Router({
         {
           path: '/pm/userManager',
           component: userManager
+        },
+        {
+          path: '/pm/menuManager',
+          component: menuManager
         },
         {
          path: '/um/addUser',
