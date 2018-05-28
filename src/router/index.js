@@ -11,6 +11,7 @@ import managerment from '../components/userManagerment/managerment'
 import loginRecord from '../components/userManagerment/loginRecord'
 import showService from '../components/customerService/showService'
 import customerRecord from '../components/customerService/customerRecord'
+import orderSearch from '../components/serviceManagerment/orderSearch'
 
 Vue.use(Router)
 
@@ -62,6 +63,10 @@ const router = new Router({
           {
           path: '/customerService/customerRecord',
           component: customerRecord,
+          },
+          {
+            path: '/service/orderSearch',
+            component: orderSearch,
           }
       ]
     }
