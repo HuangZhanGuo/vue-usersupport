@@ -72,7 +72,7 @@
 					subItems:  [
 						{
 							name: '债权还款查询',
-							url: '/service/search',
+							url: '/serviceManagerment/search',
 							isSubItemShow: false,
 							code: '2-1'
 						},
