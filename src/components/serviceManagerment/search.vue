@@ -360,13 +360,14 @@ export default {
       //每页显示数据量变更
         handleSizeChange: function(val) {
             this.pagesize = val;
-            this.searchAttendance(this.currentPage, this.pagesize);
+            alert(val);
+            this.onSubmit(this.currentPage, this.pagesize);
         },
 
         //页码变更
         handleCurrentChange: function(val) {
             this.currentPage = val;
-            this.searchAttendance(this.currentPage, this.pagesize);
+            this.onSubmit(this.currentPage, this.pagesize);
         }, 
       bizStatus(row,column){
         //   100待还、200已还、300逾期还款、400提前还款、500坏账回购
