@@ -1,6 +1,6 @@
 <template>
 	<div id="system-info">
-		<span>{{msg}}</span>
+		<span id="NetName">{{msg}}</span>
 	</div>
 </template>
 
@@ -20,7 +20,11 @@ export default {
 #system-info {
 	padding: 40px 80px 20px 80px;
 	width: 100%;
-	height: 60px;
+	height: 120px;
 	background-color: #36374c;
+}
+#NetName {
+	color: aliceblue;
+	font-size: 28px;
 }
 </style>
