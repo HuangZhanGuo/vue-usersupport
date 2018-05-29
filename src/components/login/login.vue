@@ -78,6 +78,7 @@ export default {
         .post(this.HOST + "/login", params)
         .then((response)=> {
           if (response.data.code == 1) {
+          sessionStorage.setItem("username",this.user.username);
           sessionStorage.setItem("isLogin",true); 
           this.$store.dispatch('login',true);
           this.$message({
