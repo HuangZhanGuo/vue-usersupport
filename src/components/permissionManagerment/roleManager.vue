@@ -40,7 +40,7 @@
                         type="selection">
                     </el-table-column>
                     <el-table-column property="menuUrl" label="url" width="200"></el-table-column>
-                    <el-table-column property="menuName" label="名称"></el-table-column>
+                    <el-table-column property="description" label="名称"></el-table-column>
                 </el-table>
 
                 <el-button type="text" size="big"  @click="consuleThisDialog">取消</el-button>
