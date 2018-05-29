@@ -61,30 +61,45 @@
 				var self = this
 				var old_password = this.old_password
 				var new_password = this.new_password
-				var confirm_password = this.confirm_password
-				var params = new URLSearchParams();
-				params.append("password",this.new_password)
-				this.$http.get(this.HOST + '/sc/getByUserId')
+                var confirm_password = this.confirm_password
+                
+                var paramsForVerity = new URLSearchParams();
+                paramsForVerity.append("password",this.old_password);
+
+				var paramsForChange = new URLSearchParams();
+                paramsForChange.append("password",this.new_password);
+
+				this.$http.post(this.HOST + '/sc/getByUserPassword', paramsForVerity)
 				.then(function(response){
+                    console.log(response.data);
+                    console.log(response.data.data);
 					if(response.data.code == 1){
-						var oldpassword = response.data.data.password;
-						if(old_password == oldpassword){
-							if(new_password == confirm_password){
-								self.$http.post(self.HOST + 'sc/updatePasswordById',params)
-								.then(function(result){
-									if(result.data.code == 1){
-										alert("修改成功");
-									}
-									else{
-										alert("修改失败");
-									}
-								});
-							}else{
-								alert("两次输入的密码不一致");
-							}
-						} else {
-							alert("请输入正确的原密码");
-						}
+                        if(new_password == confirm_password){
+                            self.$http.post(self.HOST + 'sc/updatePasswordById',paramsForChange)
+                            .then(function(result){
+                                if(result.data.code == 1){
+                                    //清空数据
+                                    this.old_password = "";
+                                    this.new_password = "";
+                                    this.confirm_password = "";
+                                    //成功显示结果
+                                    this.$message({
+                                        message: '修改成功',
+                                        type: 'success'
+                                    });
+                                } else {
+                                    //失败显示结果
+                                    this.$message({
+                                        message: '修改失败',
+                                        type: 'error'
+                                    });
+                                }
+                            });
+                        }else{
+                            alert("两次输入的密码不一致");
+                        }
+					} else {
+						alert("请输入正确的原密码");
 					}
 				});
 			}

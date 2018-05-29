@@ -5,38 +5,23 @@
 		<form @submit.prevent="submit">
 			<table>
 				<tr>
-					<td><span>登录账号: </span></td>
-					<td><input class="user-write-input" type="text" name="username" v-model="user.username" placeholder="用户名/联系手机/邮箱"></td>
+					<td><span style="width: 80px">登录账号: </span></td>
+          <td><el-input v-model="user.username" placeholder="用户名/联系手机/邮箱" style="width:250px"></el-input></td>
 				</tr>
 				<tr>
 					<td><span>通行码:&nbsp; </span></td>
-					<td><input class="user-write-input" type="password" name="password" v-model="user.password"></td>
+          <td><el-input v-model="user.password" type="password" placeholder="您的密码"></el-input></td>
 				</tr>
-				<!-- <tr>
-					<td><span>验证码:&nbsp; </span></span></td>
-					<td><input type="text" name="verityCode" class="verityCode" id="myVerityCode" onchange="javascript:blurForVerityCode();"/></td>
-				</tr> -->
-				<!-- <tr>
-					<td colspan="2">
-						<img src="/verity/verityImg" class="verityImg" id="myVerityImg"/>
-						<a id="btn_changeVerityImg" href="javascript:changeVerityImg()">换一张</a>
-					</td>
-				</tr> -->
 				<tr>
 					<router-link to="/register">立即注册</router-link>
 				</tr>
 				<tr>
-					<td>&nbsp;</td>
-					<td class="t-login-btn">
-						<input class="login-btn" id="btn-submit" type="submit" value="登录">
-						<!--<input class="login-btn" id="btn-reset" type="reset" value="重置">-->
-						<input @click="testTheJQuery" type="button" value="重置"/>
-					</td>
-				</tr>
-				<tr class="error">
-					<td colspan="2">
-						<p th:if="${param.logout}" class="bg-warning">已成功注销</p><!-- 1 -->
-						<p th:if="${param.error}" class="bg-danger">登录账号或密码错误，请重试</p> <!-- 2 -->
+					<td class="t-login-btn" colspan="2">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <el-input id="btn-submit" type="submit" class="login-btn" style="width: 200px">登录</el-input>
+            <el-button @click="resetInput" type="info" round>重置</el-button>
+						<!-- <input class="login-btn" id="btn-submit" type="submit" value="登录">
+						<input type="button" value="重置"/> -->
 					</td>
 				</tr>
 			</table>
@@ -65,8 +50,9 @@ export default {
     Header
   },
   methods: {
-    testTheJQuery: function() {
-      console.log($);
+    resetInput: function() {
+      this.user.username = "";
+      this.user.password = "";
     },
     submit: function() {
       //封装数据
@@ -78,6 +64,7 @@ export default {
         .post(this.HOST + "/login", params)
         .then((response)=> {
           if (response.data.code == 1) {
+          sessionStorage.setItem("username",this.user.username);
           sessionStorage.setItem("isLogin",true); 
           this.$store.dispatch('login',true);
           this.$message({
@@ -120,6 +107,7 @@ export default {
   margin-left: 0px;
   padding-left: 450px;
   padding-top: 40px;
+  padding-bottom: 80px;
   border: 4px solid #dbdbdb;
   background-color: #ffffff;
 }

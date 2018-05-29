@@ -42,12 +42,16 @@
 </style>
 
 <script scode>
-
+   
   export default {
 	name: 'index',
+	created() {
+        this.search()
+    },
 	data () {
 		return {
-			items: [
+			items: "",
+			admin:[
 				{
 					name: '系统设置',
 					isSubShow: false,
@@ -162,26 +166,6 @@
 					name: '考勤系统',
 					isSubShow: false,
 					subItems:  [
-						// {
-						// 	name: '加班管理',
-						// 	url: '/attendance/overtime',
-						// 	code: '7-1'
-						// },
-						// {
-						// 	name: '调休管理',
-						// 	url: '/attendance/rest',
-						// 	code: '7-2'
-						// },
-						// {
-						// 	name: '请假管理',
-						// 	url: '/attendance/leave',
-						// 	code: '7-3'
-						// },
-						// {
-						// 	name: '审核管理',
-						// 	url: '/attendance/deal',
-						// 	code: '7-4'
-						// },
 						{
 							name: '考勤管理',
 							url: '/attendance/attendance',
@@ -194,12 +178,111 @@
 						}
 					]
 				}
+			],
+			custom:[
+				{
+					name: '系统设置',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '基本信息',
+							url: '/sc/base_infomation',
+							isSubItemShow: false,
+							code: '1-1'
+						},
+						{
+							name: '修改密码',
+							url: '/sc/reset_password',
+							isSubItemShow: false,
+							code: '1-2'
+						}
+					]
+				},
+				{
+					name: '业务查询',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '债权还款查询',
+							url: '/serviceManagerment/search',
+							isSubItemShow: false,
+							code: '2-1'
+						},
+						{
+							name: '订单还款查询',
+							url: '/service/orderSearch',
+							isSubItemShow: false,
+							code: '2-2'
+						}
+					]
+				},
+				{
+					name: '日志管理',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '资金记录',
+							url: '/logManagement/moneyRecord',
+							code: '3-1'
+						},
+						{
+							name: '资金流水',
+							url: '/logManagement/generalJournal',
+							code: '3-2'
+						}
+					]
+				},
+				{
+					name: '客服服务',
+					isSubShow: false,
+					subItems:  [
+						{
+							name: '客户服务',
+							url: '/customerService/customerRecord',
+							code: '4-1'
+						},
+						{
+							name: '服务列表',
+							url: '/customerService/showService',
+							code: '4-2'
+						}
+					]
+				}
 			]
 		}
 	},
 	methods:{
+		search: function() {
+						let self = this;
+						var username = sessionStorage.getItem("username");
+            this.$http.get(this.HOST + "/um/getRoleByUsername",{params: {
+                username: username,
+            }})
+            .then((response)=> {
+                if (response.data.code == 200) {
+									if(response.data.data==1){
+										self.items = self.admin;
+									}else{
+										self.items = self.custom;
+									}
+                    this.$message({
+                        message: '查询成功',
+                        type: 'success'
+                    });
+                } else {
+                    this.$message({
+                    message: "查询异常。请刷新页面或重新登录后尝试。",
+                    type: 'error'
+                    });
+                }
+            })
+
+						
+            
+        },
 		login_out:function(){
-    sessionStorage.removeItem("isLogin")
+		sessionStorage.removeItem("isLogin");
+		sessionStorage.removeItem("username");
     this.$store.dispatch('login',false);
     window.location.href = "#/";
 		}

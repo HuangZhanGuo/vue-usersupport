@@ -6,12 +6,12 @@
             <div class="form-group" style="padding: 15px 0;">
 
             </div>
-            <span class="btn btn-default" @click="search()">查询</span>
+            <el-button type="primary" @click="search()" style="float: right; margin-right: 50px;" round>点击查询</el-button>
         </form>
         <div>
             <el-table
                 :data="tableData"
-                style="width: 100%">
+                style="width: 100%; padding: 20px 80px">
                 <el-table-column
                     prop="username"
                     label="工号">
@@ -23,11 +23,6 @@
                  <el-table-column
                     prop="loginTime"
                     label="登录时间"
-                    :formatter="dateFormat" >
-                </el-table-column>
-                 <el-table-column
-                    prop="logoutTime"
-                    label="登出时间"
                     :formatter="dateFormat" >
                 </el-table-column>
             </el-table>

@@ -346,8 +346,8 @@ export default {
             params.append("startTime",startTime);
             params.append("endTime",endTime);
             params.append("bizStatus",self.bizStatus1);
-            params.append("pageNumber",self.currentPage);
-            params.append("pageSize",self.pagesize);
+            params.append("PageNumber",self.currentPage);
+            params.append("PageSize",self.pagesize);
             this.$http.post(this.HOST+"/service/repayment",params)
             .then(function(res){
                 self.loading2=false;
