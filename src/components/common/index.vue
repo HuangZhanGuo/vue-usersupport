@@ -54,13 +54,13 @@
 					subItems:  [
 						{
 							name: '基本信息',
-							url: '/r',
+							url: '/sc/base_infomation',
 							isSubItemShow: false,
 							code: '1-1'
 						},
 						{
 							name: '修改密码',
-							url: '/l',
+							url: '/sc/reset_password',
 							isSubItemShow: false,
 							code: '1-2'
 						}
@@ -72,7 +72,7 @@
 					subItems:  [
 						{
 							name: '债权还款查询',
-							url: '/service/search',
+							url: '/serviceManagerment/search',
 							isSubItemShow: false,
 							code: '2-1'
 						},
@@ -90,12 +90,12 @@
 					subItems:  [
 						{
 							name: '资金记录',
-							url: '/money/moneyRecord',
+							url: '/logManagement/moneyRecord',
 							code: '3-1'
 						},
 						{
 							name: '资金流水',
-							url: '/log/generalJournal',
+							url: '/logManagement/generalJournal',
 							code: '3-2'
 						}
 					]
@@ -122,17 +122,17 @@
 					subItems:  [
 						{
 							name: '用户角色管理',
-							url: '/role/userManage',
+							url: '/pm/userManager',
 							code: '5-1'
 						},
 						{
 							name: '角色管理',
-							url: '/role/userManage',
+							url: '/pm/roleManager',
 							code: '5-2'
 						},
 						{
 							name: '资源管理',
-							url: '/menu/menuManage',
+							url: '/pm/menuManager',
 							code: '5-3'
 						}
 					]

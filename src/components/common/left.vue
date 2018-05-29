@@ -51,7 +51,7 @@ export default {
 					subItems:  [
 						{
 							name: '债权还款查询',
-							url: '/service/search',
+							url: '/serviceManagerment/search',
 						},
 						{
 							name: '订单还款查询',

@@ -5,7 +5,7 @@
     <span>{{msg}}</span>
 </div>
 <div id="main_div">
-    <form id="form_insertUser" action="/register" method="post">
+    <form @submit.prevent="submit">
         <table id="register_table" class="table table-hover">
             <tr class="head_table">
                 <td colspan="2">
@@ -17,7 +17,7 @@
                     工号
                 </td>
                 <td>
-                    <input class="syncVerity" type="text" name="workNumber" id="workNumber"/>
+                    <input class="syncVerity" type="text" name="workNumber" id="workNumber" v-model="user.workNumber"/>
                 </td>
                 <td class="error">
                     <span class="error_info"></span>
@@ -28,7 +28,7 @@
                     用户名
                 </td>
                 <td>
-                    <input class="syncVerity" type="text" name="username" id="username"/>
+                    <input class="syncVerity" type="text" name="username" id="username" v-model="user.username"/>
                 </td>
                 <td class="error">
                     <span class="error_info"></span>
@@ -39,7 +39,7 @@
                     手机号码：
                 </td>
                 <td>
-                    <input class="syncVerity" type="text" name="phone" id="phone"/>
+                    <input class="syncVerity" type="text" name="phone" id="phone" v-model="user.phone"/>
                 </td>
                 <td class="error">
                     <span class="error_info"></span>
@@ -50,7 +50,7 @@
                     邮箱
                 </td>
                 <td>
-                    <input class="syncVerity" type="text" name="email"  id="email"/>
+                    <input class="syncVerity" type="text" name="email"  id="email" v-model="user.email">
                 </td>
                 <td class="error">
                     <span class="error_info"></span>
@@ -61,7 +61,7 @@
                     密码
                 </td>
                 <td>
-                    <input class="syncVerity" type="password" name="password" id="password" />
+                    <input class="syncVerity" type="password" name="password" id="password" v-model="user.password"/>
                 </td>
                 <td class="error">
                     <span class="error_info"></span>
@@ -72,7 +72,7 @@
                     再次输入密码
                 </td>
                 <td>
-                    <input class="syncVerity" type="password" id="password_verity" />
+                    <input class="syncVerity" type="password" id="password_verity" v-model="user.password_verity"/>
                 </td>
                 <td class="error">
                     <span class="error_info"></span>
@@ -80,7 +80,7 @@
             </tr>
             <tr class="foot_table">
                 <td colspan="2">
-                    <input id="btn_submit" type="button" value="注册" />
+                    <input id="btn_submit" type="submit" value="注册" />
                 </td>
             </tr>
         </table>
@@ -94,7 +94,54 @@ export default {
   name: 'register',
   data () {
     return {
-      msg: '笑脸金服  客服助手管理系统 V1.0.0'
+      msg: '笑脸金服  客服助手管理系统 V1.0.0',
+      user: {
+        workNumber: "",
+        username: "",
+        password: "",
+        phone: "",
+        email: "",
+        password_verity: ""
+      }
+    }
+  },
+  methods: {
+    submit: function() {
+      //判断，若两次密码输入不一致，则不执行表单提交操作。
+      if(this.user.password != this.user.password_verity) {
+          this.$message({
+            message: "两次密码输入不一致。",
+            type: 'error'
+          });
+          return;
+      }
+      //封装数据
+      var params = new URLSearchParams();
+      params.append("workNumber", this.user.workNumber);
+      params.append("username", this.user.username);
+      params.append("password", this.user.password);
+      params.append("phone", this.user.phone);
+      params.append("email", this.user.email);
+     
+      this.$http
+        .post(this.HOST + "/register", params)
+        .then((response)=> {
+          console.log(response.data);
+          if (response.data.code == 1) {
+            this.$message({
+                message: '注册成功',
+                type: 'success'
+            });
+          } else {
+            this.$message({
+              message: "注册失败！请重试。",
+              type: 'error'
+            });
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     }
   }
 }

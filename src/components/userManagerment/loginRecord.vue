@@ -48,7 +48,10 @@
 </template>
 <script>
 export default {
-     data () {
+    created() {
+		this.search()
+	},
+    data () {
         return {
         DateValue: '',
         tableData: [],
@@ -58,12 +61,12 @@ export default {
         }
     },
     methods:{
-       dateFormat:function(row, column) {
-               var date = row[column.property];
-          if (date == "") {
-        return "";
-    }
-    return new Date(date).toLocaleString();
+        dateFormat:function(row, column) {
+            var date = row[column.property];
+            if (date == "") {
+                return "";
+            }
+            return new Date(date).toLocaleString();
         },
 
         //组合查询
@@ -72,6 +75,7 @@ export default {
           this.$http.get(this.HOST+"/ul/getUserByPage?pageNumber="+self.currentPage+"&pageSize="+self.pagesize)
             .then(function(res){
              console.log(self.tableData);
+             console.log(res);
               self.tableData=res.data.data.data;
               self.total=res.data.data.totalCount;
 

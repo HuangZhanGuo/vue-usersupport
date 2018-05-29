@@ -76,7 +76,7 @@
                         <el-table-column type="index" show-overflow-tooltip="true"  label="编号"></el-table-column>
                         <el-table-column prop="orderId" show-overflow-tooltip="true" label="订单ID" width="150"></el-table-column>
                         <el-table-column prop="userId" show-overflow-tooltip="true" label="用户ID"></el-table-column>
-                        <el-table-column prop="planDate" :formatter="formatPlanDate" show-overflow-tooltip="true" label="计划还款时间"></el-table-column>
+                        <el-table-column prop="planDate" :formatter="formatPlanDate" width="200" label="计划还款时间"></el-table-column>
                         <el-table-column prop="bizStatus" :formatter="formatBizStatus" show-overflow-tooltip="true" label="是否还款" ></el-table-column>
                         <el-table-column prop="credPlanPrincipal" show-overflow-tooltip="true" label="订单计划本金" ></el-table-column>
                         <el-table-column prop="credRealPrincipal" show-overflow-tooltip="true" label="订单实收本金"></el-table-column>
@@ -114,7 +114,7 @@
                         <el-table-column prop="creditId" show-overflow-tooltip="true" label="债权ID" width="150"></el-table-column>
                         <el-table-column prop="orderId" show-overflow-tooltip="true" label="订单ID" width="150"></el-table-column>
                         <el-table-column prop="userId" show-overflow-tooltip="true" label="用户ID"></el-table-column>
-                        <el-table-column prop="planDate" :formatter="formatPlanDate" show-overflow-tooltip="true" label="计划还款时间"></el-table-column>
+                        <el-table-column prop="planDate" :formatter="formatPlanDate" width="200" label="计划还款时间"></el-table-column>
                         <el-table-column prop="bizStatus" :formatter="formatBizStatus" label="是否还款" ></el-table-column>
                         <el-table-column prop="credPlanPrincipal" show-overflow-tooltip="true" label="债权计划本金" ></el-table-column>
                         <el-table-column prop="credRealPrincipal" show-overflow-tooltip="true" label="债权实收本金"></el-table-column>
@@ -136,9 +136,9 @@
                 <el-pagination align="center"
                     @size-change="handleSizeChange2"
                     @current-change="handleCurrentChange2"
-                    :current-page="currentPage"
+                    :current-page="currentPage2"
                     :page-sizes="[10, 20, 30, 40]"
-                    :page-size="10"
+                    :page-size="pagesize2"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total2">
                 </el-pagination>
@@ -154,6 +154,8 @@ export default {
             total2:0,
             currentPage:1,
             pagesize:10, 
+            currentPage2:1,
+            pagesize2:10, 
             loading2:false,
             dateTime:[],
             bizStatus:'',
@@ -181,7 +183,7 @@ export default {
         formatPlanDate(row,column){
             return new Date(parseInt(row.planDate)).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
         } ,
-        //期数
+        // 期数
         formatCredTermNum(row,column){
             var data = row.credTermNum;
             if(data != null && data != ""){
@@ -280,7 +282,7 @@ export default {
         },
         //加息类型
         formatPfType(row,column){
-            var data = row.pfType
+            var data = row.pfType;
             switch(data){
                 case 100:
                     return "首购加息";
@@ -307,6 +309,14 @@ export default {
             var startTime = null;
             var endTime = null;
             var flag = false;
+            if(!self.mobile){
+                this.$message({
+                    message: '请输入手机号查询',
+                    type: 'warning',
+                });
+                self.loading2 = false;
+                return;
+            }
             if(self.dateTime[0] != null && self.dateTime[0] != ""){
                 startTime = new Date(self.dateTime[0]).getTime();
             }
@@ -337,8 +347,9 @@ export default {
                 console.log(response);
                 self.tableData = response.data.data[1].data;
                 self.tableData2 = response.data.data[0].data;
+                console.info("response.data.data[0].data"+response.data.data[0].data.toString);
                 self.total = response.data.data[0].totalCount;
-                alert(self.total2);
+                alert(self.total);
                 self.loading2 = false;
                 self.ishide = false;
             })
@@ -349,11 +360,20 @@ export default {
         searchRepaymentDetail(){
             let self = this;
             self.loading2 = true;
+            if(!self.mobile){
+                this.$message({
+                    message: '请输入手机号查询',
+                    type: 'warning',
+                });
+                self.loading2 = false;
+                return;
+            }
             if(self.orderId == null || self.orderId == ""){
                 this.$message({
                     message: '请选择订单ID重新查询后再查看债权明细',
                     type: 'warning'
                 });
+                self.loading2 = false;
                 return;
             }
             console.info(self.dateTime);
@@ -384,8 +404,8 @@ export default {
             params.append('startTime', startTime);
             params.append('endTime', endTime);
             params.append('iframeId', self.iframeId);
-            params.append("pageNumber",self.currentPage);
-          params.append("pageSize",self.pagesize);
+            params.append("pageNumber",self.currentPage2);
+          params.append("pageSize",self.pagesize2);
             // var deptName = $("#companySelect option:selected").text();
             this.$http.post(this.HOST + '/service/repaymentDetail',params)
             .then(function (response) {
@@ -425,14 +445,14 @@ export default {
         }, 
         //每页显示数据量变更
         handleSizeChange2(val) {
-            this.pagesize = val;
-            this. searchRepaymentDetail(this.currentPage, this.pagesize);
+            this.pagesize2 = val;
+            this. searchRepaymentDetail(this.currentPage2, this.pagesize2);
         },
 
         //页码变更
         handleCurrentChange2(val) {
-            this.currentPage = val;
-            this. searchRepaymentDetail(this.currentPage, this.pagesize);
+            this.currentPage2 = val;
+            this. searchRepaymentDetail(this.currentPage2, this.pagesize2);
         }, 
     }
 }

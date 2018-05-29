@@ -5,13 +5,23 @@
 
             <div class="form-group" style="padding: 15px 0;">
                 <label class="labe_l" for="status-search">请选择状态:</label>
-                <select id="status-search" class="form-control" name="status" >
+                <select id="status-search" class="form-control" name="status" v-model="user.status">
                     <option value="" label="全部"></option>
                     <option value="1" label="已启用"></option>
                     <option value="0" label="已禁用"></option>
                 </select>
             </div>
+            <div class="form-group" style="padding: 15px 0;">
+                <input type="text" class="form-control" id="workNumber-search" placeholder="请输入工号" v-model="user.workNumber"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="name-search" placeholder="请输入姓名" v-model="user.username"/>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="phone-search" placeholder="请输入手机号" v-model="user.phone"/>
+            </div>
             <span class="btn btn-default" @click="search()">查询</span>
+            <span class="btn btn-default" @click="reset()">重置</span>
         </form>
         <div>
             <el-table
@@ -71,59 +81,109 @@
 export default {
      data () {
         return {
-        DateValue: '',
-        tableData: [],
-        currentPage:1,
-        pagesize:10,
-        total:0
+            DateValue: '',
+            tableData: [],
+            currentPage:1,
+            pagesize:10,
+            total:0,
+            user: {
+                status: "",
+                workNumber: "",
+                username: "",
+                phone: ""
+            }
         }
     },
     methods:{
         openStatus:function(row){
           let self = this;
-          let id = [];
-          id.push(row.userId);
-          // let parm = {"id": id};
-          this.$http.post(this.HOST+"/um/enableUserByIds",id)
-            .then(function(res){
-                console.log(res)
+          var params = new URLSearchParams();
+          params.append("id", row.userId);
+          this.$http.post(this.HOST + "/um/enableUserByIds", params)
+            .then((response)=> {
+            if (response.data.code == 1) {
+                this.$message({
+                    message: '启用成功',
+                    type: 'success'
+                });
+                self.search();
+            } else {
+                this.$message({
+                    message: "启用失败！请重试。",
+                    type: 'error'
+                });
+            }
             })
-            console.log(row.userId);
+            .catch(function(error) {
+                console.log(error);
+            });
         },
         closeStatus:function(row){
           let self = this;
-          let id = [];
-          id.push(row.userId);
-          // let parm = {"id": id};
-          this.$http.post(this.HOST+"/um/banUserByIds",id)
-            .then(function(res){
-                console.log(res)
+          var params = new URLSearchParams();
+          params.append("id", row.userId);
+          this.$http.post(this.HOST+"/um/banUserByIds", params)
+            .then((response)=> {
+            if (response.data.code == 1) {
+                this.$message({
+                    message: '禁用成功',
+                    type: 'success'
+                });
+                self.search();
+            } else {
+                this.$message({
+                    message: "禁用失败！请重试。",
+                    type: 'error'
+                });
+            }
             })
-            console.log(row.userId);
+            .catch(function(error) {
+                console.log(error);
+            });
         },
 
         statusFormat:function(row, column) {
-               var date = row[column.property];
-              if (date == 1) {
-                return "启用";
-            }  else{
-          return "禁用"
-        }
+            var date = row[column.property];
+            if (date == 1) {
+                return "启用中";
+            } else{
+                return "禁用中";
+            }
         },
         //组合查询
         search:function(){
           let self = this;
-          this.$http.get(this.HOST+"/um/getUserByPage?pageNumber="+self.currentPage+"&pageSize="+self.pagesize+"&status="+$("#status-search").val())
-            .then(function(res){
-             console.log(self.tableData);
-              self.tableData=res.data.data.data;
-              self.total=res.data.data.totalCount;
 
+          this.$http.get(this.HOST+"/um/getUserByPage", {params: {
+              status: this.user.status,
+              workNumber: this.user.workNumber,
+              username: this.user.username,
+              phone: this.user.phone,
+              pageNumber: self.currentPage,
+              pageSize: self.pagesize
+          }}).then((response)=> {
+                console.log(response.data);
+                if (response.data.code == 1) {
+                    self.tableData=response.data.data.data;
+                    self.total=response.data.data.totalCount;
+                    this.$message({
+                        message: '查询成功',
+                        type: 'success'
+                    });
+                } else {
+                    this.$message({
+                    message: "查询异常。请刷新页面或重新登录后尝试。",
+                    type: 'error'
+                    });
+                }
             })
         },
-        // dept:function(row,column){
-        //     return row.deptNumber=this.deptNumber;
-        // },
+        reset: function() {
+            this.user.status = "";
+            this.user.workNumber = "";
+            this.user.username = "";
+            this.user.phone = "";
+        },
         //每页显示数据量变更
         handleSizeChange: function(val) {
             this.pagesize = val;
@@ -141,7 +201,7 @@ export default {
 </script>
 <style>
     label{
-            margin:0 5px;
-        }
+        margin:0 5px;
+    }
 </style>
 
