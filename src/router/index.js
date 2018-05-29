@@ -21,6 +21,7 @@ import baseInfomation from '../components/systemConfig/base_infomation'
 import resetPassword from '../components/systemConfig/reset_password'
 import userManager from '../components/permissionManagerment/userManager'
 import menuManager from '../components/permissionManagerment/menuManager'
+import roleManager from '../components/permissionManagerment/roleManager'
 
 Vue.use(Router)
 
@@ -64,6 +65,10 @@ const router = new Router({
         {
           path: '/pm/menuManager',
           component: menuManager
+        },
+        {
+          path: '/pm/roleManager',
+          component: roleManager
         },
         {
          path: '/um/addUser',
