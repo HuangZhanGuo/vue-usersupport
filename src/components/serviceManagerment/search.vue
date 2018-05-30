@@ -4,26 +4,27 @@
    <div>
         <el-form :inline="true" id="repaymentForm" class="demo-form-inline">
           
-            <el-form-item >
-                <el-input v-model="telephone" placeholder="手机号"></el-input>
+            <el-form-item class="search_condition">
+                <el-input v-model="telephone" clearable placeholder="手机号"></el-input>
             </el-form-item>
-            <el-form-item >
-                <el-input v-model="orderId" placeholder="订单ID"></el-input>
+            <el-form-item class="search_condition">
+                <el-input v-model="orderId" clearable placeholder="订单ID"></el-input>
             </el-form-item>
-            <el-form-item >
-                <el-input v-model="creditId" placeholder="债权ID"></el-input>
+            <el-form-item class="search_condition">
+                <el-input v-model="creditId" clearable placeholder="债权ID"></el-input>
             </el-form-item>
             <el-date-picker
                 v-model="dateTime"
                 type="daterange"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                :default-time="['00:00:00', '23:59:59']">
+                :default-time="['00:00:00', '23:59:59']"
+                class="search_condition">
             </el-date-picker>
-            <el-form-item label="">
+            <el-form-item label="" style="width: 100px" clearable>
                 <el-select v-model="bizStatus1" placeholder="全部">
-                <el-option label="已还" value="100"></el-option>
-                <el-option label="未还" value="200"></el-option>
+                <el-option label="未还" value="100"></el-option>
+                <el-option label="已还" value="200"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -34,7 +35,7 @@
                 <label>用户资产信息：</label>
                 
             </div>
-        <div class="table table-bordered data-table display" cellspacing="0" style="width:100%;word-break: keep-all;white-space:nowrap">
+        <div v-loading="loading2" class="table table-bordered data-table display" cellspacing="0" style="width:100%;word-break: keep-all;white-space:nowrap">
             <el-table
                 :data="tableData"
                 tooltip-effect="dark"
@@ -145,7 +146,7 @@
             </div>
             <!-- <div class="table table-bordered data-table display" cellspacing="0" style="width:100%;word-break: keep-all;white-space:nowrap"> -->
                     <el-table
-                    v-loading="loading2"
+                    
                     :data="tableData1"
                     tooltip-effect="dark"
                     
@@ -294,13 +295,14 @@ export default {
       total: 0,
       tableData1:[],
       tableData:[],
-      
+      loading2:false
 
     };
   },
   methods:{
       onSubmit:function(){
           let self = this;
+          self.loading2=true;
           var startTime=null;
           var endTime=null;
           if(self.dateTime[0] != null && self.dateTime[0] != ""){
@@ -315,6 +317,7 @@ export default {
                 message: '请输入电话',
                 type: 'warning'
             });
+            self.loading2=false;
             return;
         }
         if( self.orderId==null|| self.orderId==''){
@@ -322,6 +325,7 @@ export default {
                 message: '请输入订单Id',
                 type: 'warning'
             });
+            self.loading2=false;
             return;
         }
         if( self.creditId==null|| self.creditId==''){
@@ -329,6 +333,7 @@ export default {
                 message: '请输入债权Id',
                 type: 'warning'
             });
+            self.loading2=false;
             return;
         }
 
@@ -337,6 +342,7 @@ export default {
                 message: '请选择时间',
                 type: 'warning'
             });
+            self.loading2=false;
             return;
         }
           var params = new URLSearchParams();
@@ -346,8 +352,8 @@ export default {
             params.append("startTime",startTime);
             params.append("endTime",endTime);
             params.append("bizStatus",self.bizStatus1);
-            params.append("pageNumber",self.currentPage);
-            params.append("pageSize",self.pagesize);
+            params.append("PageNumber",self.currentPage);
+            params.append("PageSize",self.pagesize);
             this.$http.post(this.HOST+"/service/repayment",params)
             .then(function(res){
                 self.loading2=false;
@@ -360,13 +366,14 @@ export default {
       //每页显示数据量变更
         handleSizeChange: function(val) {
             this.pagesize = val;
-            this.searchAttendance(this.currentPage, this.pagesize);
+            alert(val);
+            this.onSubmit(this.currentPage, this.pagesize);
         },
 
         //页码变更
         handleCurrentChange: function(val) {
             this.currentPage = val;
-            this.searchAttendance(this.currentPage, this.pagesize);
+            this.onSubmit(this.currentPage, this.pagesize);
         }, 
       bizStatus(row,column){
         //   100待还、200已还、300逾期还款、400提前还款、500坏账回购
@@ -478,4 +485,8 @@ export default {
 </script>
 
 <style>
+.search_condition {
+    width: 180px;
+}
+
 </style>

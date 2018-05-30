@@ -234,7 +234,6 @@ export default {
             params.append("description", self.EditMenuform.description);
             this.$http.post(this.HOST + "/menu/updateByPrimaryKey", params)
             .then((response)=> {
-                console.log(response.data);
                 if (response.data.code == 1) {
                     this.search()
                     this.$message({

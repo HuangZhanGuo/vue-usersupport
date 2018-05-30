@@ -12,13 +12,13 @@
                 </select>
             </div>
             <div class="form-group" style="padding: 15px 0;">
-                <input type="text" class="form-control" id="workNumber-search" placeholder="请输入工号" v-model="user.workNumber"/>
+                <input type="text" class="form-control" clearable id="workNumber-search" placeholder="请输入工号" v-model="user.workNumber"/>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="name-search" placeholder="请输入姓名" v-model="user.username"/>
+                <input type="text" class="form-control" clearable id="name-search" placeholder="请输入姓名" v-model="user.username"/>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="phone-search" placeholder="请输入手机号" v-model="user.phone"/>
+                <input type="text" class="form-control" clearable id="phone-search" placeholder="请输入手机号" v-model="user.phone"/>
             </div>
             <span class="btn btn-default" @click="search()">查询</span>
             <span class="btn btn-default" @click="reset()">重置</span>

@@ -180,18 +180,21 @@ export default {
         self.loading2=true;
         var mobile = this.mobile;
         if(mobile == "" || mobile == null){
-                alert("请选择手机");
-                return;
-            }
+            alert("请选择手机");
+            self.loading2 = false;
+            return;
+        }
         var type = this.type;
         var start = this.datetimeStart;
         if(start == "" || start == null){
                 alert("请选择开始时间");
+                self.loading2 = false;
                 return;
             }
         var end = this.datetimeEnd;
         if(end == "" || end == null){
                 alert("请选择结束时间");
+                self.loading2 = false;
                 return;
             }
 
