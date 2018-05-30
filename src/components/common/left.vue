@@ -65,11 +65,11 @@ export default {
 					subItems:  [
 						{
 							name: '资金记录',
-							url: '/money/moneyRecord',
+							url: '/logManagement/moneyRecord',
 						},
 						{
 							name: '资金流水',
-							url: '/log/generalJournal',
+							url: '/logManagement/generalJournal',
 						}
 					]
 				},
