@@ -67,8 +67,10 @@
                         label="关联id">
                     </el-table-column>
                     <el-table-column 
+                    :formatter="formatterInouttype"
                         prop="inouttype"
                         label="收入支出">
+                        
                     </el-table-column>
                     <el-table-column 
                         prop="amount"
@@ -83,10 +85,12 @@
                         label="备注">
                     </el-table-column>
                     <el-table-column 
+                    :formatter="formatterTime"
                         prop="createtime"
                         label="创建时间">
                     </el-table-column>
                     <el-table-column 
+                    :formatter="formatterTime"
                         prop="modifytime"
                         label="修改时间">
                     </el-table-column>
@@ -121,12 +125,12 @@ export default {
           label: '所有类型'
         },
         {
-            value: '1',
-          label: '汇入'
+            value: '0',
+          label: '支付'
         },
         {
-            value: '2',
-          label: '汇出'
+            value: '1',
+          label: '收入'
         }
         ],
         type:'',
@@ -187,20 +191,19 @@ export default {
             this.currentPage = val;
             this.searchM(this.currentPage, this.pagesize);
         },
-        formatterTradetime(row,column){
-            return Format(new Date(row.tradetime),"yyyy-MM-dd HH:mm")
+        formatterTime(row, column){
+            return Format(new Date(row[column.property]),"yyyy-MM-dd HH:mm")
         },
-        formatterColumn(row, column) {
-            switch(row.tradetype){
-                // 0：正常，1：迟到，2：早退，3：迟到早退，4：旷工，5：异常，6：请假，7：调休）
+        formatterInouttype(row, column) {
+            switch(row.inouttype){
                 
 
-                case 1:
-                return '汇入';
+                case 0:
+                return '支出';
                 break;
 
-                case 2:
-                return '汇出';
+                case 1:
+                return '收入';
                 break;
             
              
