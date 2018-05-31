@@ -107,7 +107,107 @@
 </template>
 <script>
 export default {
-  
+    data () { 
+        return {
+        datetimeStart:'',
+        datetimeEnd:'',
+        tableData:[],
+        currentPage:1, 
+        pagesize:10, 
+        total:0,
+        mobile:'',
+        options:[{
+            value: '',
+          label: '所有类型'
+        },
+        {
+            value: '1',
+          label: '汇入'
+        },
+        {
+            value: '2',
+          label: '汇出'
+        }
+        ],
+        type:'',
+        loading2:false
+        }
+    },
+    methods:{
+    searchM:function(){
+        console.log("cha xun");
+        let self = this;
+        self.loading2=true;
+        var mobile = this.mobile;
+        if(mobile == "" || mobile == null){
+            alert("请选择手机");
+            self.loading2 = false;
+            return;
+        }
+        var type = this.type;
+        var start = this.datetimeStart;
+        if(start == "" || start == null){
+                alert("请选择开始时间");
+                self.loading2 = false;
+                return;
+            }
+        var end = this.datetimeEnd;
+        if(end == "" || end == null){
+                alert("请选择结束时间");
+                self.loading2 = false;
+                return;
+            }
+
+        var params = new URLSearchParams();
+
+        params.append("mobile", mobile);
+        params.append("type", type);
+        params.append("starttime", start);
+        params.append("endtime",end);
+        params.append("pageNumber",self.currentPage);
+         params.append("pageSize",self.pagesize);
+        
+
+         this.$http.post(this.HOST+"/log/generalPage",params)
+            .then(function(res){
+                self.loading2=false;
+                console.log(self.tableData);
+              self.tableData=res.data.data.data;
+              self.total=res.data.data.totalCount;
+            })
+        
+        },
+        handleSizeChange: function(val) {
+            this.pagesize = val;
+            this.searchM(this.currentPage, this.pagesize);
+        },
+
+        //页码变更
+        handleCurrentChange: function(val) {
+            this.currentPage = val;
+            this.searchM(this.currentPage, this.pagesize);
+        },
+        formatterTradetime(row,column){
+            return Format(new Date(row.tradetime),"yyyy-MM-dd HH:mm")
+        },
+        formatterColumn(row, column) {
+            switch(row.tradetype){
+                // 0：正常，1：迟到，2：早退，3：迟到早退，4：旷工，5：异常，6：请假，7：调休）
+                
+
+                case 1:
+                return '汇入';
+                break;
+
+                case 2:
+                return '汇出';
+                break;
+            
+             
+            }
+        },
+    }  ,
+    
 }
 </script>
 <style>
